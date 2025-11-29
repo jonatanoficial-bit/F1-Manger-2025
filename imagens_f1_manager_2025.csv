@@ -1,0 +1,39 @@
+﻿tipo,nome,escuderia,pais,codigo_pais_bandeira,arquivo_avatar_sugerido,arquivo_bandeira_sugerido,arquivo_logo_escuderia_sugerido
+piloto,Lando Norris,mclaren,Reino Unido,gb,lando_norris.png,gb.png,mclaren.png
+piloto,Oscar Piastri,mclaren,Austrália,au,oscar_piastri.png,au.png,mclaren.png
+piloto,Charles Leclerc,ferrari,Mônaco,mc,charles_leclerc.png,mc.png,ferrari.png
+piloto,Lewis Hamilton,ferrari,Reino Unido,gb,lewis_hamilton.png,gb.png,ferrari.png
+piloto,Max Verstappen,red_bull,Holanda,nl,max_verstappen.png,nl.png,red_bull.png
+piloto,Yuki Tsunoda,red_bull,Japão,jp,yuki_tsunoda.png,jp.png,red_bull.png
+piloto,George Russell,mercedes,Reino Unido,gb,george_russell.png,gb.png,mercedes.png
+piloto,Kimi Antonelli,mercedes,Itália,it,kimi_antonelli.png,it.png,mercedes.png
+piloto,Fernando Alonso,aston_martin,Espanha,es,fernando_alonso.png,es.png,aston_martin.png
+piloto,Lance Stroll,aston_martin,Canadá,ca,lance_stroll.png,ca.png,aston_martin.png
+piloto,Pierre Gasly,alpine,França,fr,pierre_gasly.png,fr.png,alpine.png
+piloto,Franco Colapinto,alpine,Argentina,ar,franco_colapinto.png,ar.png,alpine.png
+piloto,Esteban Ocon,haas,França,fr,esteban_ocon.png,fr.png,haas.png
+piloto,Oliver Bearman,haas,Reino Unido,gb,oliver_bearman.png,gb.png,haas.png
+piloto,Isack Hadjar,racing_bulls,França,fr,isack_hadjar.png,fr.png,racing_bulls.png
+piloto,Liam Lawson,racing_bulls,Nova Zelândia,nz,liam_lawson.png,nz.png,racing_bulls.png
+piloto,Alexander Albon,williams,Tailândia,th,alex_albon.png,th.png,williams.png
+piloto,Carlos Sainz Jr.,williams,Espanha,es,carlos_sainz.png,es.png,williams.png
+piloto,Gabriel Bortoleto,kick_sauber,Brasil,br,gabriel_bortoleto.png,br.png,kick_sauber.png
+piloto,Nico Hülkenberg,kick_sauber,Alemanha,de,nico_hulkenberg.png,de.png,kick_sauber.png
+chefe_de_equipe,Andrea Stella,mclaren,Itália,it,manager_andrea_stella.png,it.png,mclaren.png
+chefe_de_equipe,Frédéric Vasseur,ferrari,França,fr,manager_fred_vasseur.png,fr.png,ferrari.png
+chefe_de_equipe,Laurent Mekies,red_bull,França,fr,manager_laurent_mekies.png,fr.png,red_bull.png
+chefe_de_equipe,Toto Wolff,mercedes,Áustria,at,manager_toto_wolff.png,at.png,mercedes.png
+chefe_de_equipe,Andy Cowell,aston_martin,Reino Unido,gb,manager_andy_cowell.png,gb.png,aston_martin.png
+chefe_de_equipe,Flavio Briatore,alpine,Itália,it,manager_flavio_briatore.png,it.png,alpine.png
+chefe_de_equipe,Ayao Komatsu,haas,Japão,jp,manager_ayao_komatsu.png,jp.png,haas.png
+chefe_de_equipe,Alan Permane,racing_bulls,Reino Unido,gb,manager_alan_permane.png,gb.png,racing_bulls.png
+chefe_de_equipe,James Vowles,williams,Reino Unido,gb,manager_james_vowles.png,gb.png,williams.png
+chefe_de_equipe,Jonathan Wheatley,kick_sauber,Reino Unido,gb,manager_jonathan_wheatley.png,gb.png,kick_sauber.png
+avatar_custom_manager,Avatar custom 1,qualquer,custom,xx,manager_custom_01.png,xx.png,
+avatar_custom_manager,Avatar custom 2,qualquer,custom,xx,manager_custom_02.png,xx.png,
+avatar_custom_manager,Avatar custom 3,qualquer,custom,xx,manager_custom_03.png,xx.png,
+avatar_custom_manager,Avatar custom 4,qualquer,custom,xx,manager_custom_04.png,xx.png,
+avatar_custom_manager,Avatar custom 5,qualquer,custom,xx,manager_custom_05.png,xx.png,
+avatar_custom_manager,Avatar custom 6,qualquer,custom,xx,manager_custom_06.png,xx.png,
+avatar_custom_manager,Avatar custom 7,qualquer,custom,xx,manager_custom_07.png,xx.png,
+avatar_custom_manager,Avatar custom 8,qualquer,custom,xx,manager_custom_08.png,xx.png,
