@@ -681,22 +681,59 @@ function encerrarSimulacaoCorrida() {
   document.getElementById("btn-corrida-continuar").disabled = false;
 }
 /* ============================================================
-   PARTE 3 — PÓDIO, TABELAS, PONTUAÇÃO, SALVAR/CARREGAR
+   PARTE 3 — PÓDIO, TABELAS, PONTUAÇÃO, SAVE/LOAD
    ============================================================ */
 
 /* ===============================
-   VER PÓDIO
+   PONTUAÇÃO DO MUNDIAL
    =============================== */
 
-function abrirPodio() {
-  mostrarTela("podio");
+function aplicarPontuacao(resultado) {
+  // resultado = array de { piloto, performance }
+  resultado.forEach((r, i) => {
+    const piloto = r.piloto;
+    const equipeKey = piloto.equipe;
 
-  const div = document.getElementById("podio-container");
-  div.innerHTML = "";
+    const pontos = PONTOS[i] || 0; // top 10 pontua, resto 0
+
+    if (pontos > 0) {
+      if (TABELA_PILOTOS[piloto.nome] == null) {
+        TABELA_PILOTOS[piloto.nome] = 0;
+      }
+      if (TABELA_CONSTRUTORES[equipeKey] == null) {
+        TABELA_CONSTRUTORES[equipeKey] = 0;
+      }
+
+      TABELA_PILOTOS[piloto.nome] += pontos;
+      TABELA_CONSTRUTORES[equipeKey] += pontos;
+    }
+  });
+}
+
+/* ===============================
+   PÓDIO (BOTÃO "VER PÓDIO" DA CORRIDA)
+   =============================== */
+
+function irParaPodio() {
+  // chamado pelo botão da tela de CORRIDA
+  mostrarTela("podio");
+  renderPodio();
+}
+
+function renderPodio() {
+  const container = document.getElementById("podio-top3");
+  container.innerHTML = "";
+
+  if (!JOGO.resultadoCorrida || JOGO.resultadoCorrida.length === 0) {
+    const aviso = document.createElement("p");
+    aviso.innerText = "Nenhum resultado de corrida disponível.";
+    container.appendChild(aviso);
+    return;
+  }
 
   const top3 = JOGO.resultadoCorrida.slice(0, 3);
 
-  top3.forEach((r, i) => {
+  top3.forEach((r, idx) => {
     const p = r.piloto;
     const equipe = ESCUDERIAS.find(e => e.key === p.equipe);
 
@@ -704,111 +741,106 @@ function abrirPodio() {
     card.classList.add("podio-card");
 
     card.innerHTML = `
-      <h3>${i + 1}º Lugar</h3>
+      <h3>${idx + 1}º Lugar</h3>
       <div class="mini-avatar"></div>
       <p>${p.nome}</p>
       <p>${equipe ? equipe.nome : ""}</p>
     `;
 
-    div.appendChild(card);
+    container.appendChild(card);
   });
 }
 
-function continuarDepoisDoPodio() {
+/* chamado pelo botão "Voltar ao Lobby" da tela de PÓDIO */
+function finalizarCorrida() {
+  // Avança etapa
   JOGO.etapaAtual++;
 
   if (JOGO.etapaAtual > CALENDARIO.length) {
-    alert("TEMPORADA ENCERRADA! Parabéns pelo campeonato!");
+    alert("TEMPORADA ENCERRADA! Parabéns pela temporada!");
+    // opcional: salvarJogo();
     mostrarTela("lobby");
+    iniciarLobby();
     return;
   }
 
+  // opcional: salvar automaticamente a cada corrida
+  // salvarJogo();
+
   mostrarTela("lobby");
+  iniciarLobby();
 }
 
 /* ===============================
-   PONTUAÇÃO DO MUNDIAL
-   =============================== */
-
-function aplicarPontuacao(resultado) {
-  resultado.forEach((r, i) => {
-    const piloto = r.piloto;
-
-    // Pontuação oficial F1
-    if (i < PONTOS.length) {
-      TABELA_PILOTOS[piloto.nome] += PONTOS[i];
-      TABELA_CONSTRUTORES[piloto.equipe] += PONTOS[i];
-    }
-  });
-}
-
-/* ===============================
-   TABELA DE PILOTOS (Mundial)
+   CLASSIFICAÇÃO DE PILOTOS
    =============================== */
 
 function abrirTabelaPilotos() {
   mostrarTela("tabela-pilotos");
 
-  const div = document.getElementById("tabela-pilotos-lista");
+  const div = document.getElementById("tabela-pilotos-conteudo");
   div.innerHTML = "";
 
-  const lista = Object.keys(TABELA_PILOTOS)
-    .map(nome => ({
+  const lista = Object.keys(TABELA_PILOTOS).map(nome => {
+    const piloto = PILOTOS.find(p => p.nome === nome);
+    return {
       nome,
       pontos: TABELA_PILOTOS[nome],
-      piloto: PILOTOS.find(p => p.nome === nome)
-    }))
+      piloto
+    };
+  }).filter(x => x.piloto) // garante piloto válido
     .sort((a, b) => b.pontos - a.pontos);
 
-  lista.forEach((d, i) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
+  lista.forEach((item, idx) => {
+    const p = item.piloto;
+    const equipe = ESCUDERIAS.find(e => e.key === p.equipe);
 
-    const equipe = ESCUDERIAS.find(e => e.key === d.piloto.equipe);
-
-    card.innerHTML = `
-      <h3>${i + 1}º - ${d.nome}</h3>
-      <p>${equipe?.nome || ""}</p>
-      <p>Pontos: ${d.pontos}</p>
+    const linha = document.createElement("div");
+    linha.classList.add("card");
+    linha.innerHTML = `
+      <p>
+        ${idx + 1}º -
+        <span class="mini-avatar"></span>
+        ${item.nome} (${equipe ? equipe.nome : ""}) — ${item.pontos} pts
+      </p>
     `;
-
-    div.appendChild(card);
+    div.appendChild(linha);
   });
 }
 
 /* ===============================
-   TABELA DE CONSTRUTORES
+   CLASSIFICAÇÃO DE EQUIPES
    =============================== */
 
-function abrirTabelaConstrutores() {
+function abrirTabelaEquipes() {
   mostrarTela("tabela-equipes");
 
-  const div = document.getElementById("tabela-equipes-lista");
+  const div = document.getElementById("tabela-equipes-conteudo");
   div.innerHTML = "";
 
-  const lista = Object.keys(TABELA_CONSTRUTORES)
-    .map(k => ({
-      equipeKey: k,
-      pontos: TABELA_CONSTRUTORES[k],
-      equipe: ESCUDERIAS.find(e => e.key === k)
-    }))
-    .sort((a, b) => b.pontos - a.pontos);
+  const lista = ESCUDERIAS.map(e => ({
+    equipe: e,
+    pontos: TABELA_CONSTRUTORES[e.key] || 0
+  })).sort((a, b) => b.pontos - a.pontos);
 
-  lista.forEach((d, i) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
+  lista.forEach((item, idx) => {
+    const e = item.equipe;
 
-    card.innerHTML = `
-      <h3>${i + 1}º - ${d.equipe.nome}</h3>
-      <p>Pontos: ${d.pontos}</p>
+    const linha = document.createElement("div");
+    linha.classList.add("card");
+    linha.innerHTML = `
+      <p>
+        ${idx + 1}º -
+        <span class="mini-logo"></span>
+        ${e.nome} — ${item.pontos} pts
+      </p>
     `;
-
-    div.appendChild(card);
+    div.appendChild(linha);
   });
 }
 
 /* ===============================
-   SALVAR E CARREGAR JOGO
+   SALVAR / CARREGAR / RESETAR CARREIRA
    =============================== */
 
 function salvarJogo() {
@@ -818,42 +850,73 @@ function salvarJogo() {
     TABELA_CONSTRUTORES
   };
 
-  localStorage.setItem("F1_MANAGER_2025_SAVE", JSON.stringify(save));
-  alert("Carreira salva com sucesso!");
+  try {
+    localStorage.setItem("F1_MANAGER_2025_SAVE", JSON.stringify(save));
+    alert("Carreira salva com sucesso!");
+  } catch (e) {
+    console.error("Erro ao salvar jogo:", e);
+    alert("Erro ao salvar carreira.");
+  }
 }
 
 function carregarJogo() {
-  const data = localStorage.getItem("F1_MANAGER_2025_SAVE");
+  let data;
+  try {
+    data = localStorage.getItem("F1_MANAGER_2025_SAVE");
+  } catch (e) {
+    console.error("Erro ao ler save:", e);
+  }
+
   if (!data) {
-    alert("Nenhum save encontrado.");
+    alert("Nenhuma carreira salva encontrada.");
     return;
   }
 
-  const save = JSON.parse(data);
-
-  JOGO = save.JOGO;
-  TABELA_PILOTOS = save.TABELA_PILOTOS;
-  TABELA_CONSTRUTORES = save.TABELA_CONSTRUTORES;
+  try {
+    const save = JSON.parse(data);
+    JOGO = save.JOGO;
+    TABELA_PILOTOS = save.TABELA_PILOTOS;
+    TABELA_CONSTRUTORES = save.TABELA_CONSTRUTORES;
+  } catch (e) {
+    console.error("Erro ao interpretar save:", e);
+    alert("Save corrompido.");
+    return;
+  }
 
   iniciarLobby();
   alert("Carreira carregada!");
 }
 
 function resetarCarreira() {
-  if (!confirm("Tem certeza que deseja apagar tudo?")) return;
+  if (!confirm("Tem certeza que deseja apagar tudo e recomeçar?")) return;
 
-  localStorage.removeItem("F1_MANAGER_2025_SAVE");
+  try {
+    localStorage.removeItem("F1_MANAGER_2025_SAVE");
+  } catch (e) {
+    console.error("Erro ao limpar save:", e);
+  }
 
-  location.reload();
-}
+  // reset estado
+  JOGO = {
+    gerente: null,
+    equipeSelecionada: null,
+    dinheiro: 5000000,
+    funcionarios: [],
+    patrocinador: null,
+    pilotosEquipe: [],
+    etapaAtual: 1,
+    classificacao: [],
+    resultadoCorrida: [],
+    carro: { aero: 0, motor: 0, chassis: 0, pit: 0 }
+  };
 
-/* ===============================
-   BOTÕES DE VOLTAR GLOBAL
-   =============================== */
+  TABELA_PILOTOS = {};
+  TABELA_CONSTRUTORES = {};
 
-function voltarQualquerTela() {
-  // garante que sempre volta ao Lobby
-  iniciarLobby();
+  PILOTOS.forEach(p => TABELA_PILOTOS[p.nome] = 0);
+  ESCUDERIAS.forEach(e => TABELA_CONSTRUTORES[e.key] = 0);
+
+  mostrarTela("tela-capa");
 }
 
 /* ===============================
