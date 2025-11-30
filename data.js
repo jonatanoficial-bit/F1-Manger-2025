@@ -204,34 +204,34 @@ const PATROCINADORES = [
 ];
 
 /* ============================================================
-   CALENDÁRIO 2025 (24 GPs)
+   CALENDÁRIO 2025 (24 GPs, COM CHAVE DE FUNDO)
    ============================================================ */
 
 const CALENDARIO = [
-  { etapa: 1, nome: "GP do Bahrein", circuito: "Sakhir", voltas: 57, pais: "bh" },
-  { etapa: 2, nome: "GP da Arábia Saudita", circuito: "Jeddah", voltas: 50, pais: "sa" },
-  { etapa: 3, nome: "GP da Austrália", circuito: "Albert Park", voltas: 58, pais: "au" },
-  { etapa: 4, nome: "GP do Japão", circuito: "Suzuka", voltas: 53, pais: "jp" },
-  { etapa: 5, nome: "GP da China", circuito: "Xangai", voltas: 56, pais: "cn" },
-  { etapa: 6, nome: "GP de Miami", circuito: "Miami", voltas: 57, pais: "us" },
-  { etapa: 7, nome: "GP da Emília-Romanha", circuito: "Imola", voltas: 63, pais: "it" },
-  { etapa: 8, nome: "GP de Mônaco", circuito: "Monte Carlo", voltas: 78, pais: "mc" },
-  { etapa: 9, nome: "GP do Canadá", circuito: "Montreal", voltas: 70, pais: "ca" },
-  { etapa: 10, nome: "GP da Espanha", circuito: "Barcelona", voltas: 66, pais: "es" },
-  { etapa: 11, nome: "GP da Áustria", circuito: "Red Bull Ring", voltas: 71, pais: "at" },
-  { etapa: 12, nome: "GP da Inglaterra", circuito: "Silverstone", voltas: 52, pais: "gb" },
-  { etapa: 13, nome: "GP da Hungria", circuito: "Hungaroring", voltas: 70, pais: "hu" },
-  { etapa: 14, nome: "GP da Bélgica", circuito: "Spa-Francorchamps", voltas: 44, pais: "be" },
-  { etapa: 15, nome: "GP dos Países Baixos", circuito: "Zandvoort", voltas: 72, pais: "nl" },
-  { etapa: 16, nome: "GP da Itália", circuito: "Monza", voltas: 53, pais: "it" },
-  { etapa: 17, nome: "GP do Azerbaijão", circuito: "Baku", voltas: 51, pais: "az" },
-  { etapa: 18, nome: "GP de Singapura", circuito: "Marina Bay", voltas: 61, pais: "sg" },
-  { etapa: 19, nome: "GP dos EUA - Austin", circuito: "COTA", voltas: 56, pais: "us" },
-  { etapa: 20, nome: "GP do México", circuito: "Hermanos Rodríguez", voltas: 71, pais: "mx" },
-  { etapa: 21, nome: "GP de São Paulo", circuito: "Interlagos", voltas: 71, pais: "br" },
-  { etapa: 22, nome: "GP de Las Vegas", circuito: "Las Vegas Strip", voltas: 50, pais: "us" },
-  { etapa: 23, nome: "GP do Catar", circuito: "Lusail", voltas: 57, pais: "qa" },
-  { etapa: 24, nome: "GP de Abu Dhabi", circuito: "Yas Marina", voltas: 58, pais: "ae" }
+  { etapa: 1,  nome: "GP do Bahrein",         circuito: "Sakhir",              voltas: 57, pais: "bh", trackKey: "bahrain" },
+  { etapa: 2,  nome: "GP da Arábia Saudita",  circuito: "Jeddah",              voltas: 50, pais: "sa", trackKey: "jeddah" },
+  { etapa: 3,  nome: "GP da Austrália",       circuito: "Albert Park",         voltas: 58, pais: "au", trackKey: "australia" },
+  { etapa: 4,  nome: "GP do Japão",           circuito: "Suzuka",              voltas: 53, pais: "jp", trackKey: "japan" },
+  { etapa: 5,  nome: "GP da China",           circuito: "Xangai",              voltas: 56, pais: "cn", trackKey: "china" },
+  { etapa: 6,  nome: "GP de Miami",           circuito: "Miami",               voltas: 57, pais: "us", trackKey: "miami" },
+  { etapa: 7,  nome: "GP da Emília-Romanha",  circuito: "Imola",               voltas: 63, pais: "it", trackKey: "imola" },
+  { etapa: 8,  nome: "GP de Mônaco",          circuito: "Monte Carlo",         voltas: 78, pais: "mc", trackKey: "monaco" },
+  { etapa: 9,  nome: "GP do Canadá",          circuito: "Montreal",            voltas: 70, pais: "ca", trackKey: "canada" },
+  { etapa: 10, nome: "GP da Espanha",         circuito: "Barcelona",           voltas: 66, pais: "es", trackKey: "spain" },
+  { etapa: 11, nome: "GP da Áustria",         circuito: "Red Bull Ring",       voltas: 71, pais: "at", trackKey: "austria" },
+  { etapa: 12, nome: "GP da Inglaterra",      circuito: "Silverstone",         voltas: 52, pais: "gb", trackKey: "silverstone" },
+  { etapa: 13, nome: "GP da Hungria",         circuito: "Hungaroring",         voltas: 70, pais: "hu", trackKey: "hungary" },
+  { etapa: 14, nome: "GP da Bélgica",         circuito: "Spa-Francorchamps",   voltas: 44, pais: "be", trackKey: "spa" },
+  { etapa: 15, nome: "GP dos Países Baixos",  circuito: "Zandvoort",           voltas: 72, pais: "nl", trackKey: "zandvoort" },
+  { etapa: 16, nome: "GP da Itália",          circuito: "Monza",               voltas: 53, pais: "it", trackKey: "monza" },
+  { etapa: 17, nome: "GP do Azerbaijão",      circuito: "Baku",                voltas: 51, pais: "az", trackKey: "baku" },
+  { etapa: 18, nome: "GP de Singapura",       circuito: "Marina Bay",          voltas: 61, pais: "sg", trackKey: "singapore" },
+  { etapa: 19, nome: "GP dos EUA - Austin",   circuito: "COTA",                voltas: 56, pais: "us", trackKey: "cota" },
+  { etapa: 20, nome: "GP do México",          circuito: "Hermanos Rodríguez",  voltas: 71, pais: "mx", trackKey: "mexico" },
+  { etapa: 21, nome: "GP de São Paulo",       circuito: "Interlagos",          voltas: 71, pais: "br", trackKey: "interlagos" },
+  { etapa: 22, nome: "GP de Las Vegas",       circuito: "Las Vegas Strip",     voltas: 50, pais: "us", trackKey: "lasvegas" },
+  { etapa: 23, nome: "GP do Catar",           circuito: "Lusail",              voltas: 57, pais: "qa", trackKey: "qatar" },
+  { etapa: 24, nome: "GP de Abu Dhabi",       circuito: "Yas Marina",          voltas: 58, pais: "ae", trackKey: "abudhabi" }
 ];
 
 /* ============================================================
