@@ -1,227 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>F1 Manager AAA - Cinematic Edition</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>F1 Manager AAA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- =========================== -->
-<!--         TELA DE CAPA        -->
-<!-- =========================== -->
+<!-- CAPA -->
 <section id="tela-capa" class="tela visible">
-    <div class="capa-container">
-        <h1 class="titulo-capa">F1 MANAGER <span>AAA</span></h1>
-        <p class="subtitulo-capa">Edição Cinematográfica Definitiva</p>
-        <button class="btn-principal" onclick="abrirMenuPrincipal()">Iniciar</button>
-    </div>
+  <div class="capa-container">
+    <h1 class="titulo-capa">F1 MANAGER <span>2025</span></h1>
+    <p class="subtitulo-capa">Simulador de gerenciamento estilo Fórmula 1</p>
+    <button class="btn-principal" onclick="abrirMenuPrincipal()">Iniciar</button>
+  </div>
 </section>
 
-
-<!-- =========================== -->
-<!--      MENU PRINCIPAL         -->
-<!-- =========================== -->
+<!-- MENU PRINCIPAL -->
 <section id="menu-principal" class="tela">
-    <h2>Menu Principal</h2>
-    <div class="menu-grid">
-        <button onclick="abrirCriarGerente()">Criar Novo Gerente</button>
-        <button onclick="abrirGerentesReais()">Usar Gerente Real 2025</button>
-        <button onclick="abrirCarregar()">Carregar Carreira</button>
-        <button onclick="abrirCreditos()">Créditos</button>
-    </div>
-    <button class="btn-voltar" onclick="voltarParaCapa()">Voltar</button>
+  <h2>Menu Principal</h2>
+  <div class="menu-grid">
+    <button onclick="abrirCriarGerente()">Criar Novo Gerente</button>
+    <button onclick="abrirGerentesReais()">Usar Gerente Real 2025</button>
+    <button onclick="carregarJogo()">Carregar Carreira</button>
+    <button onclick="resetarCarreira()">Resetar Carreira</button>
+    <button onclick="abrirCreditos()">Créditos</button>
+  </div>
+  <button class="btn-voltar" onclick="voltarParaCapa()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--    CRIAR GERENTE (AVATARES) -->
-<!-- =========================== -->
+<!-- CRIAR GERENTE -->
 <section id="criar-gerente" class="tela">
-    <h2>Criar Novo Gerente</h2>
+  <h2>Criar Novo Gerente</h2>
+  <label>Nome do Gerente:</label>
+  <input id="input-nome-gerente" placeholder="Digite seu nome">
 
-    <label>Seu Nome:</label>
-    <input id="input-nome-gerente" placeholder="Digite seu nome">
+  <h3>Escolha um Avatar</h3>
+  <div id="lista-avatares" class="avatar-grid"></div>
 
-    <h3>Escolha seu Avatar</h3>
-    <div id="lista-avatares" class="avatar-grid">
-        <!-- Preenchido dinamicamente -->
-    </div>
+  <h3>Escolha a Bandeira</h3>
+  <div id="lista-bandeiras" class="bandeira-grid"></div>
 
-    <h3>Escolha a Bandeira</h3>
-    <div id="lista-bandeiras" class="bandeira-grid">
-        <!-- Preenchido dinamicamente -->
-    </div>
-
-    <button class="btn-principal" onclick="confirmarGerenteCriado()">Confirmar</button>
-    <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
+  <button class="btn-principal" onclick="confirmarGerenteCriado()">Confirmar</button>
+  <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!-- GERENTES REAIS DA TEMPORADA -->
-<!-- =========================== -->
+<!-- GERENTES REAIS -->
 <section id="gerentes-reais" class="tela">
-    <h2>Gerentes Reais 2025</h2>
-    <div id="lista-gerentes-reais" class="lista-reais">
-        <!-- Preenchido via data.js -->
-    </div>
-    <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
+  <h2>Gerentes Reais 2025</h2>
+  <div id="lista-gerentes-reais" class="lista-reais"></div>
+  <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--  ESCOLHER ESCUDERIA (LOGOS) -->
-<!-- =========================== -->
+<!-- ESCOLHER ESCUDERIA -->
 <section id="escolher-escuderia" class="tela">
-    <h2>Escolha sua Escuderia</h2>
-    <div id="lista-escuderias" class="escuderia-grid">
-        <!-- Gerado dinamicamente -->
-    </div>
-    <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
+  <h2>Escolha sua Escuderia</h2>
+  <div id="lista-escuderias" class="escuderia-grid"></div>
+  <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--           LOBBY             -->
-<!-- =========================== -->
+<!-- LOBBY -->
 <section id="lobby" class="tela">
-    <div class="painel-superior">
-        <div class="gerente-info">
-            <div id="avatar-gerente"></div>
-            <div>
-                <h3 id="nome-gerente"></h3>
-                <p id="pais-gerente"></p>
-            </div>
-        </div>
-        <div class="equipe-info">
-            <h3 id="nome-equipe"></h3>
-            <p id="motor-equipe"></p>
-        </div>
-        <div class="financas-info">
-            <h3>Finanças</h3>
-            <p id="dinheiro-atual"></p>
-        </div>
+  <div class="painel-superior">
+    <div class="gerente-info">
+      <div id="avatar-gerente"></div>
+      <div>
+        <h3 id="nome-gerente"></h3>
+        <p id="pais-gerente"></p>
+      </div>
     </div>
+    <div class="equipe-info">
+      <h3 id="nome-equipe"></h3>
+      <p id="motor-equipe"></p>
+    </div>
+    <div class="financas-info">
+      <h3>Finanças</h3>
+      <p id="dinheiro-atual"></p>
+    </div>
+  </div>
 
-    <div class="lobby-botoes">
-        <button onclick="abrirCalendario()">Calendário</button>
-        <button onclick="abrirPatrocinio()">Patrocínio</button>
-        <button onclick="abrirFuncionarios()">Funcionários</button>
-        <button onclick="abrirMercadoPilotos()">Mercado de Pilotos</button>
-        <button class="btn-principal" onclick="abrirProximaCorrida()">Próxima Corrida</button>
-    </div>
+  <div class="lobby-botoes">
+    <button onclick="abrirCalendario()">Calendário</button>
+    <button onclick="abrirPatrocinio()">Patrocínio</button>
+    <button onclick="abrirFuncionarios()">Funcionários</button>
+    <button onclick="abrirMercadoPilotos()">Mercado de Pilotos</button>
+    <button onclick="abrirOficina()">Oficina / Carro</button>
+    <button onclick="abrirTabelaPilotos()">Classificação Pilotos</button>
+    <button onclick="abrirTabelaEquipes()">Classificação Equipes</button>
+    <button class="btn-principal" onclick="abrirProximaCorrida()">Próxima Corrida</button>
+  </div>
 </section>
 
-
-<!-- =========================== -->
-<!--        CALENDARIO           -->
-<!-- =========================== -->
+<!-- CALENDÁRIO -->
 <section id="calendario" class="tela">
-    <h2>Calendário da Temporada 2025</h2>
-    <div id="lista-corridas" class="corrida-grid">
-        <!-- Preenchido com data.js -->
-    </div>
-    <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <h2>Calendário da Temporada 2025</h2>
+  <div id="lista-corridas" class="corrida-grid"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--        PATROCINADORES       -->
-<!-- =========================== -->
+<!-- PATROCINADORES -->
 <section id="patrocinadores" class="tela">
-    <h2>Patrocínios Disponíveis</h2>
-    <div id="lista-patrocinios" class="patrocinio-grid">
-        <!-- Preenchido via data.js -->
-    </div>
-    <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <h2>Patrocínios</h2>
+  <div id="lista-patrocinios" class="patrocinio-grid"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--         FUNCIONARIOS        -->
-<!-- =========================== -->
+<!-- FUNCIONÁRIOS -->
 <section id="funcionarios" class="tela">
-    <h2>Funcionários</h2>
-    <div id="lista-funcionarios" class="func-grid">
-        <!-- Preenchido via data.js -->
-    </div>
-    <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <h2>Funcionários</h2>
+  <div id="lista-funcionarios" class="func-grid"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--      MERCADO DE PILOTOS    -->
-<!-- =========================== -->
+<!-- MERCADO DE PILOTOS -->
 <section id="mercado-pilotos" class="tela">
-    <h2>Mercado de Pilotos</h2>
-    <div id="lista-pilotos-mercado" class="mercado-grid">
-        <!-- Preenchido via data.js -->
-    </div>
-    <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <h2>Mercado de Pilotos</h2>
+  <div id="lista-pilotos-mercado" class="mercado-grid"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
+<!-- OFICINA / CARRO -->
+<section id="oficina" class="tela">
+  <h2>Oficina - Melhorias do Carro</h2>
+  <p>Melhorias influenciam diretamente na performance da classificação e da corrida.</p>
+  <div id="oficina-status" class="tabela"></div>
+  <div id="oficina-upgrades" class="oficina-grid"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+</section>
 
-<!-- =========================== -->
-<!--      TELA GP - EVENTO       -->
-<!-- =========================== -->
+<!-- TELA GP -->
 <section id="tela-gp" class="tela">
-    <h2 id="gp-nome"></h2>
-    <p id="gp-circuito"></p>
-    <p id="gp-voltas"></p>
-
-    <button onclick="abrirTreinoLivre()">Treino Livre</button>
-    <button onclick="abrirQualificacao()">Classificação</button>
-    <button class="btn-principal" onclick="abrirCorrida()">Corrida</button>
-
-    <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <h2 id="gp-nome"></h2>
+  <p id="gp-circuito"></p>
+  <p id="gp-voltas"></p>
+  <button onclick="abrirTreinoLivre()">Treino Livre</button>
+  <button onclick="abrirQualificacao()">Classificação</button>
+  <button class="btn-principal" onclick="abrirCorrida()">Ir para Corrida</button>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-
-<!-- =========================== -->
-<!--     TREINO LIVRE           -->
-<!-- =========================== -->
+<!-- TREINO LIVRE -->
 <section id="treino-livre" class="tela">
-    <h2>Treino Livre</h2>
-    <div id="texto-treino" class="texto-maquina"></div>
-    <button class="btn-principal" onclick="finalizarTreino()">Finalizar Treino</button>
+  <h2>Treino Livre</h2>
+  <div id="texto-treino" class="texto-maquina"></div>
+  <button class="btn-principal" onclick="finalizarTreino()">Ir para Classificação</button>
 </section>
 
-
-<!-- =========================== -->
-<!--       CLASSIFICAÇÃO         -->
-<!-- =========================== -->
+<!-- CLASSIFICAÇÃO -->
 <section id="classificacao" class="tela">
-    <h2>Classificação</h2>
-    <div id="resultado-classificacao" class="tabela"></div>
-    <button class="btn-principal" onclick="finalizarClassificacao()">Ir para Corrida</button>
+  <h2>Classificação</h2>
+  <div id="resultado-classificacao" class="tabela"></div>
+  <button class="btn-principal" onclick="finalizarClassificacao()">Ir para Corrida</button>
 </section>
 
-
-<!-- =========================== -->
-<!--          CORRIDA            -->
-<!-- =========================== -->
+<!-- CORRIDA -->
 <section id="corrida" class="tela">
-    <h2>Corrida</h2>
-    <div id="resultado-corrida" class="tabela"></div>
-    <button class="btn-principal" onclick="finalizarCorrida()">Voltar ao Lobby</button>
+  <h2>Corrida</h2>
+  <div id="corrida-voltas"></div>
+  <div id="resultado-corrida" class="tabela"></div>
+  <button id="btn-corrida-continuar" class="btn-principal" onclick="irParaPodio()" disabled>
+    Ver Pódio
+  </button>
 </section>
 
+<!-- CLASSIFICAÇÃO PILOTOS -->
+<section id="tabela-pilotos" class="tela">
+  <h2>Classificação de Pilotos</h2>
+  <div id="tabela-pilotos-conteudo" class="tabela"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+</section>
 
-<!-- =========================== -->
-<!--           CRÉDITOS          -->
-<!-- =========================== -->
+<!-- CLASSIFICAÇÃO EQUIPES -->
+<section id="tabela-equipes" class="tela">
+  <h2>Classificação de Construtores</h2>
+  <div id="tabela-equipes-conteudo" class="tabela"></div>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+</section>
+
+<!-- PÓDIO -->
+<section id="podio" class="tela">
+  <h2>Pódio</h2>
+  <div id="podio-top3" class="podio-grid"></div>
+  <button class="btn-principal" onclick="finalizarCorrida()">Continuar</button>
+</section>
+
+<!-- CRÉDITOS -->
 <section id="creditos" class="tela">
-    <h2>Créditos</h2>
-    <p>Desenvolvido por Jonatan Vale & IA</p>
-    <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
+  <h2>Créditos</h2>
+  <p>Desenvolvido por Jonatan Vale &amp; IA</p>
+  <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
-
 
 <script src="data.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
