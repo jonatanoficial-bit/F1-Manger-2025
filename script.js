@@ -655,3 +655,197 @@ function finalizarCorrida() {
 
     voltarLobby();
 }
+/* ============================================================
+   SCRIPT.JS — F1 MANAGER AAA
+   PARTE 5 — Salvamento, Carregamento, Reset e Utilidades
+   ============================================================ */
+
+/* ============================================================
+   SALVAMENTO AUTOMÁTICO
+   ============================================================ */
+
+function salvarJogo() {
+    let save = {
+        gerente: JOGO.gerente,
+        equipeSelecionada: JOGO.equipeSelecionada,
+        dinheiro: JOGO.dinheiro,
+        funcionarios: JOGO.funcionarios,
+        patrocinador: JOGO.patrocinador,
+        pilotosEquipe: JOGO.pilotosEquipe.map(p => p.nome),
+        etapaAtual: JOGO.etapaAtual,
+        tabelaPilotos: TABELA_PILOTOS,
+        tabelaConstrutores: TABELA_CONSTRUTORES
+    };
+
+    localStorage.setItem("F1_MANAGER_SALVO", JSON.stringify(save));
+}
+
+/* ============================================================
+   CARREGA JOGO SALVO
+   ============================================================ */
+
+function carregarJogo() {
+    let data = localStorage.getItem("F1_MANAGER_SALVO");
+
+    if (!data) {
+        alert("Nenhum jogo salvo encontrado!");
+        return;
+    }
+
+    let save = JSON.parse(data);
+
+    // Restaurar dados do jogo
+    JOGO.gerente = save.gerente;
+    JOGO.equipeSelecionada = save.equipeSelecionada;
+    JOGO.dinheiro = save.dinheiro;
+    JOGO.funcionarios = save.funcionarios;
+    JOGO.patrocinador = save.patrocinador;
+    JOGO.etapaAtual = save.etapaAtual;
+
+    // Restaurar pilotos da equipe
+    JOGO.pilotosEquipe = PILOTOS.filter(p =>
+        save.pilotosEquipe.includes(p.nome)
+    );
+
+    // Restaurar tabelas
+    Object.keys(save.tabelaPilotos).forEach(k => {
+        TABELA_PILOTOS[k] = save.tabelaPilotos[k];
+    });
+
+    Object.keys(save.tabelaConstrutores).forEach(k => {
+        TABELA_CONSTRUTORES[k] = save.tabelaConstrutores[k];
+    });
+
+    alert("Carreira carregada com sucesso!");
+
+    iniciarLobby();
+}
+
+/* ============================================================
+   RESETAR PARTIDA
+   ============================================================ */
+
+function resetarCarreira() {
+    if (!confirm("Tem certeza que deseja apagar TUDO e começar do zero?")) return;
+
+    localStorage.removeItem("F1_MANAGER_SALVO");
+
+    JOGO = {
+        gerente: null,
+        equipeSelecionada: null,
+        dinheiro: 5000000,
+        funcionarios: [],
+        patrocinador: null,
+        pilotosEquipe: [],
+        etapaAtual: 1,
+        classificacao: [],
+        resultadoCorrida: []
+    };
+
+    // Reiniciar tabelas
+    Object.keys(TABELA_PILOTOS).forEach(k => TABELA_PILOTOS[k] = 0);
+    Object.keys(TABELA_CONSTRUTORES).forEach(k => TABELA_CONSTRUTORES[k] = 0);
+
+    alert("Carreira reiniciada.");
+
+    mostrarTela("tela-capa");
+}
+
+/* ============================================================
+   AUTO-SAVE APÓS AÇÕES IMPORTANTES
+   ============================================================ */
+
+// Salva ao contratar funcionário
+function contratarFuncionario(f) {
+    if (JOGO.dinheiro < f.preco) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    JOGO.dinheiro -= f.preco;
+    JOGO.funcionarios.push(f);
+
+    atualizarDinheiro(JOGO.dinheiro);
+
+    salvarJogo(); // 🔥 auto-save
+
+    alert("Funcionário contratado: " + f.nome);
+
+    voltarLobby();
+}
+
+// Salva ao contratar piloto
+function contratarPiloto(nome) {
+    let piloto = PILOTOS.find(p => p.nome === nome);
+
+    if (!piloto) {
+        alert("Erro ao contratar piloto.");
+        return;
+    }
+
+    if (JOGO.pilotosEquipe.length >= 2) {
+        alert("Sua equipe já tem 2 pilotos. Demita antes.");
+        return;
+    }
+
+    let custo = piloto.rating * 30000;
+
+    if (JOGO.dinheiro < custo) {
+        alert("Dinheiro insuficiente! Preço: R$ " + custo.toLocaleString("pt-BR"));
+        return;
+    }
+
+    JOGO.dinheiro -= custo;
+    atualizarDinheiro(JOGO.dinheiro);
+
+    piloto.equipe = JOGO.equipeSelecionada;
+    JOGO.pilotosEquipe.push(piloto);
+
+    salvarJogo(); // 🔥 auto-save
+
+    alert("Piloto contratado: " + piloto.nome);
+    voltarLobby();
+}
+
+// Salva ao terminar corrida
+function finalizarCorrida() {
+
+    salvarJogo(); // 🔥 auto-save
+
+    alert("Corrida finalizada! Pontuação atualizada.");
+
+    if (JOGO.etapaAtual > CALENDARIO.length) {
+        alert("Temporada concluída!");
+        mostrarTela("lobby");
+        return;
+    }
+
+    voltarLobby();
+}
+
+/* ============================================================
+   FORMATADORES / UTILIDADES
+   ============================================================ */
+
+function formatarNumero(valor) {
+    return valor.toLocaleString("pt-BR");
+}
+
+function nomeEquipe(code) {
+    return ESCUDERIAS.find(e => e.key === code)?.nome || "Equipe";
+}
+
+function nomePais(code) {
+    return code.toUpperCase();
+}
+
+function voltarLobby() {
+    mostrarTela("lobby");
+    iniciarLobby();
+}
+
+/* ============================================================
+   FIM DO SCRIPT
+   ============================================================ */
+
+console.log("F1 Manager AAA — Script carregado com sucesso.");
