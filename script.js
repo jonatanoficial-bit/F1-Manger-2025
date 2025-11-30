@@ -497,3 +497,161 @@ function prepararCorrida() {
         <p>Clique em "Iniciar Corrida" para simular.</p>
     `;
 }
+/* ============================================================
+   SCRIPT.JS — F1 MANAGER AAA
+   PARTE 4 — IA da Corrida Completa
+   ============================================================ */
+
+/* ============================================================
+   INICIAR CORRIDA
+   ============================================================ */
+
+function abrirCorrida() {
+    mostrarTela("corrida");
+    simularCorrida();
+}
+
+/* ============================================================
+   SIMULAÇÃO DE CORRIDA — IA COMPLETA
+   ============================================================ */
+
+function simularCorrida() {
+    let pilotos = [...JOGO.classificacao]; // Grid da Classificação
+    let etapa = CALENDARIO[JOGO.etapaAtual - 1];
+
+    let resultado = [];
+
+    // Chance de chuva baseada no circuito (simples)
+    let chuva = Math.random() < 0.25; // 25%
+    let safetyCar = Math.random() < 0.15; // 15%
+
+    // Influência dos funcionários
+    let bonusEquipe = calcularBonusFuncionarios();
+
+    pilotos.forEach((p, index) => {
+        let base = p.rating * 1.2;
+
+        // Agressividade aumenta chance de ultrapassar
+        let agressividade = p.agressividade * (Math.random() * 0.4 + 0.8);
+
+        // Chuva favorece pilotos bons em molhado
+        let chuvaBonus = chuva ? p.chuva * 1.3 : p.chuva * 0.6;
+
+        // Equipe
+        let equipeRating = ESCUDERIAS.find(e => e.key === p.equipe)?.rating || 70;
+
+        // Sorte (pequeno fator randômico)
+        let sorte = Math.random() * 15;
+
+        // Safety car embaralha levemente os tempos
+        let safety = safetyCar ? (Math.random() * 8 - 4) : 0;
+
+        // Funcionários melhoram o resultado apenas para sua equipe
+        let bonusTeam = (p.equipe === JOGO.equipeSelecionada) ? bonusEquipe : 0;
+
+        // Cálculo da pontuação final de performance
+        let performanceFinal =
+            base +
+            agressividade +
+            chuvaBonus +
+            equipeRating +
+            sorte +
+            safety +
+            bonusTeam;
+
+        resultado.push({
+            piloto: p,
+            performance: performanceFinal
+        });
+    });
+
+    // Ordenar por performance (maior = melhor)
+    resultado.sort((a, b) => b.performance - a.performance);
+
+    // Salvar
+    JOGO.resultadoCorrida = resultado;
+
+    // Mostrar tabela
+    mostrarResultadoCorrida(resultado);
+
+    // Aplicar pontos do campeonato
+    aplicarPontuacao(resultado);
+
+    // Avança etapa
+    JOGO.etapaAtual++;
+}
+
+/* ============================================================
+   BONUS DOS FUNCIONÁRIOS
+   ============================================================ */
+
+function calcularBonusFuncionarios() {
+    let bonus = 0;
+
+    JOGO.funcionarios.forEach(f => {
+        bonus += f.bonus;
+    });
+
+    return bonus * 2; // multiplicador para deixar relevante
+}
+
+/* ============================================================
+   MOSTRAR RESULTADO DA CORRIDA
+   ============================================================ */
+
+function mostrarResultadoCorrida(resultado) {
+    let div = document.getElementById("resultado-corrida");
+    div.innerHTML = "<h3>Resultado Oficial</h3>";
+
+    resultado.forEach((r, index) => {
+        let p = document.createElement("p");
+        p.innerText = `${index + 1}º - ${r.piloto.nome} (${r.piloto.equipe})`;
+        div.appendChild(p);
+    });
+}
+
+/* ============================================================
+   PONTUAÇÃO OFICIAL DA F1
+   ============================================================ */
+
+const PONTOS = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+
+let TABELA_PILOTOS = {};
+let TABELA_CONSTRUTORES = {};
+
+// Inicializar tabelas
+PILOTOS.forEach(p => { TABELA_PILOTOS[p.nome] = 0; });
+ESCUDERIAS.forEach(e => { TABELA_CONSTRUTORES[e.key] = 0; });
+
+/* ============================================================
+   APLICAR PONTOS APÓS A CORRIDA
+   ============================================================ */
+
+function aplicarPontuacao(resultado) {
+    resultado.forEach((r, index) => {
+        let piloto = r.piloto;
+        let equipe = piloto.equipe;
+
+        let pontos = PONTOS[index] || 0;
+
+        TABELA_PILOTOS[piloto.nome] += pontos;
+        TABELA_CONSTRUTORES[equipe] += pontos;
+    });
+}
+
+/* ============================================================
+   FINALIZAR CORRIDA
+   ============================================================ */
+
+function finalizarCorrida() {
+
+    alert("Corrida finalizada! Pontuação atualizada.");
+
+    if (JOGO.etapaAtual > CALENDARIO.length) {
+        alert("Temporada concluída!");
+        mostrarTela("lobby");
+        return;
+    }
+
+    voltarLobby();
+}
