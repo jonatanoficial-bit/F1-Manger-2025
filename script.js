@@ -394,3 +394,106 @@ function abrirProximaCorrida() {
     document.getElementById("gp-circuito").innerText = etapa.circuito;
     document.getElementById("gp-voltas").innerText = etapa.voltas + " voltas";
 }
+/* ============================================================
+   SCRIPT.JS — F1 MANAGER AAA
+   PARTE 3 — Fluxo de GP (Treino — Quali — Pré-corrida)
+   ============================================================ */
+
+/* ============================================================
+   TREINO LIVRE
+   ============================================================ */
+
+function abrirTreinoLivre() {
+    mostrarTela("treino-livre");
+    iniciarTextoTreino();
+}
+
+function iniciarTextoTreino() {
+    let texto = 
+`Iniciando sessão de Treino Livre...
+
+Os pilotos estão entrando na pista.
+A equipe coleta dados de acerto, desgaste de pneus e consumo de combustível.
+O tráfego é leve, e os ajustes aerodinâmicos começam a ser avaliados.
+
+A equipe técnica analisa telemetria ao vivo.
+Prepare-se para a Classificação.
+`;
+
+    efeitoMaquina("texto-treino", texto, 15);
+}
+
+function finalizarTreino() {
+    mostrarTela("classificacao");
+    gerarClassificacao();
+}
+
+/* ============================================================
+   EFEITO MÁQUINA DE ESCREVER
+   ============================================================ */
+
+function efeitoMaquina(id, texto, velocidade = 20) {
+    let div = document.getElementById(id);
+    div.innerHTML = "";
+    let i = 0;
+
+    function escrever() {
+        if (i < texto.length) {
+            div.innerHTML += texto.charAt(i);
+            i++;
+            setTimeout(escrever, velocidade);
+        }
+    }
+
+    escrever();
+}
+
+/* ============================================================
+   CLASSIFICAÇÃO
+   ============================================================ */
+
+function gerarClassificacao() {
+    let pilotos = [...PILOTOS]; // copia
+
+    // A classificação considera: rating + agressividade + fator aleatório
+    pilotos.forEach(p => {
+        p.tempoClassificacao = 
+            (200 - p.rating) + 
+            (20 - p.agressividade / 5) + 
+            (Math.random() * 10); 
+    });
+
+    pilotos.sort((a, b) => a.tempoClassificacao - b.tempoClassificacao);
+    JOGO.classificacao = pilotos;
+
+    mostrarClassificacao();
+}
+
+function mostrarClassificacao() {
+    let div = document.getElementById("resultado-classificacao");
+    div.innerHTML = "";
+
+    JOGO.classificacao.forEach((p, index) => {
+        let linha = document.createElement("p");
+        linha.innerText = `${index + 1}º - ${p.nome} (${p.equipe})`;
+        div.appendChild(linha);
+    });
+}
+
+function finalizarClassificacao() {
+    mostrarTela("corrida");
+    prepararCorrida();
+}
+
+/* ============================================================
+   PRÉ-CORRIDA
+   ============================================================ */
+
+function prepararCorrida() {
+    let div = document.getElementById("resultado-corrida");
+    div.innerHTML = `
+        <p>Corrida prestes a começar...</p>
+        <p>Grid definido com base na classificação.</p>
+        <p>Clique em "Iniciar Corrida" para simular.</p>
+    `;
+}
