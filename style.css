@@ -1,312 +1,383 @@
 /* ============================================================
-   ESTILO CINEMATOGRÁFICO AAA – PRETO + DOURADO (Tema B)
+   TEMA F1 — PRETO, VERMELHO, BRANCO
    ============================================================ */
 
 :root {
-    --preto: #000000;
-    --cinza-escuro: #111111;
-    --cinza: #1a1a1a;
-    --cinza-claro: #2a2a2a;
-    --dourado: #c9a23f;
-    --dourado-brilho: #ffd676;
-    --branco: #ffffff;
-    --borda: rgba(255,255,255,0.08);
-    --sombra: rgba(0,0,0,0.55);
-    --fonte-titulo: 'Segoe UI', sans-serif;
-    --fonte-padrao: 'Segoe UI', sans-serif;
+  --f1-black: #000000;
+  --f1-dark: #111111;
+  --f1-gray: #1b1b1b;
+  --f1-light: #f5f5f5;
+  --f1-red: #e10600;
+  --f1-red-light: #ff3b30;
+  --border: rgba(255,255,255,0.12);
+  --shadow: rgba(0,0,0,0.6);
+  --font: 'Segoe UI', system-ui, sans-serif;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--fonte-padrao);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font);
 }
 
 body {
-    background: var(--preto);
-    color: var(--branco);
-    overflow-x: hidden;
+  background: radial-gradient(circle at top, #222 0, #000 55%);
+  color: var(--f1-light);
 }
 
-/* ============================
+/* ============================================================
    TELAS
-   ============================ */
+   ============================================================ */
+
 .tela {
-    display: none;
-    padding: 40px;
-    width: 100%;
-    min-height: 100vh;
-    background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+  display: none;
+  min-height: 100vh;
+  padding: 32px 20px;
 }
 
 .tela.visible {
-    display: block;
+  display: block;
 }
 
-/* ============================
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 26px;
+  margin-bottom: 18px;
+}
+
+/* ============================================================
    CAPA
-   ============================ */
+   ============================================================ */
+
 .capa-container {
-    text-align: center;
-    margin-top: 120px;
+  text-align: center;
+  margin-top: 120px;
 }
 
 .titulo-capa {
-    font-size: 55px;
-    color: var(--dourado);
-    text-shadow: 0 0 25px var(--dourado-brilho);
-    letter-spacing: 3px;
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--f1-light);
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .titulo-capa span {
-    color: var(--branco);
+  color: var(--f1-red);
 }
 
 .subtitulo-capa {
-    font-size: 18px;
-    opacity: 0.85;
-    margin-top: 10px;
+  margin-top: 10px;
+  opacity: 0.8;
 }
 
-.btn-principal {
-    margin-top: 35px;
-    padding: 16px 35px;
-    background: linear-gradient(90deg, var(--dourado), var(--dourado-brilho));
-    color: #000;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.3s;
-    box-shadow: 0 0 18px rgba(255,215,0,0.5);
-}
+/* ============================================================
+   BOTÕES
+   ============================================================ */
 
-.btn-principal:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255,215,0,0.8);
-}
-
-/* ============================
-   BOTÃO PADRÃO
-   ============================ */
 button {
-    padding: 14px 22px;
-    background: var(--cinza-claro);
-    border: 1px solid var(--borda);
-    color: var(--branco);
-    cursor: pointer;
-    margin: 5px;
-    border-radius: 6px;
-    transition: 0.25s;
+  background: var(--f1-gray);
+  color: var(--f1-light);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
 }
 
 button:hover {
-    background: var(--dourado);
-    color: #000;
+  background: var(--f1-red);
+  border-color: var(--f1-red-light);
 }
 
-/* ============================
-   BOTÃO VOLTAR
-   ============================ */
+.btn-principal {
+  margin-top: 30px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--f1-red), var(--f1-red-light));
+  border: none;
+  cursor: pointer;
+  color: var(--f1-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 15px;
+  box-shadow: 0 0 16px rgba(225,6,0,0.7);
+  transition: 0.2s;
+}
+
+.btn-principal:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 0 24px rgba(225,6,0,1);
+}
+
 .btn-voltar {
-    background: transparent;
-    border: 1px solid var(--dourado);
-    color: var(--dourado);
-    margin-top: 25px;
+  margin-top: 20px;
+  background: transparent;
+  border-color: var(--f1-red);
+  color: var(--f1-red);
 }
 
 .btn-voltar:hover {
-    background: var(--dourado);
-    color: #000;
+  background: var(--f1-red);
+  color: var(--f1-light);
 }
 
-/* ============================
-   GRID DE MENUS
-   ============================ */
+/* ============================================================
+   INPUT
+   ============================================================ */
+
+input {
+  background: #101010;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  color: var(--f1-light);
+  width: 100%;
+  max-width: 320px;
+  margin: 6px 0 16px;
+}
+
+/* ============================================================
+   MENU PRINCIPAL
+   ============================================================ */
+
 .menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    max-width: 600px;
-    margin: 40px auto;
+  max-width: 700px;
+  margin: 32px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
-/* ============================
-   AVATARES
-   ============================ */
+/* ============================================================
+   AVATARES E BANDEIRAS
+   ============================================================ */
+
 .avatar-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
-    margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 10px;
 }
 
-.avatar-grid div {
-    width: 120px;
-    height: 120px;
-    background: var(--cinza);
-    border: 2px solid var(--borda);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+.avatar-card {
+  width: 100%;
+  padding-top: 100%;
+  background: var(--f1-gray);
+  border-radius: 12px;
+  border: 2px solid transparent;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--shadow);
 }
 
-.avatar-grid div:hover {
-    border-color: var(--dourado);
-    box-shadow: 0 0 12px var(--dourado-brilho);
+.avatar-card.selecionado {
+  border-color: var(--f1-red);
 }
 
-.avatar-grid .selecionado {
-    border-color: var(--dourado);
-    box-shadow: 0 0 20px var(--dourado);
-}
-
-/* ============================
-   BANDEIRAS
-   ============================ */
 .bandeira-grid {
-    display: grid;
-    grid-template-columns: repeat(5,1fr);
-    gap: 15px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.bandeira-grid div {
-    width: 70px;
-    height: 45px;
-    background: var(--cinza);
-    border-radius: 5px;
-    border: 1px solid var(--borda);
-    cursor: pointer;
-    transition: 0.3s;
+.bandeira-card {
+  width: 100%;
+  padding-top: 65%;
+  background: var(--f1-gray);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
 }
 
-.bandeira-grid div:hover {
-    border-color: var(--dourado);
+.bandeira-card.selecionado {
+  border-color: var(--f1-red);
 }
 
-/* ============================
+/* ============================================================
+   GERENTES REAIS
+   ============================================================ */
+
+.lista-reais {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+/* ============================================================
    ESCUDERIAS
-   ============================ */
+   ============================================================ */
+
 .escuderia-grid {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 25px;
-    margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
 }
 
 .escuderia-card {
-    background: var(--cinza);
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--borda);
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
+  background: var(--f1-dark);
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  box-shadow: 0 0 14px var(--shadow);
+  transition: 0.2s;
+  text-align: left;
 }
 
 .escuderia-card:hover {
-    transform: scale(1.05);
-    border-color: var(--dourado);
-    box-shadow: 0 0 20px var(--dourado);
+  border-color: var(--f1-red);
+  transform: translateY(-2px);
 }
 
-/* ============================
+.mini-logo,
+.mini-avatar {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background: #2a2a2a;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  font-size: 9px;
+  margin-right: 6px;
+  opacity: 0.9;
+}
+
+/* ============================================================
    LOBBY
-   ============================ */
+   ============================================================ */
+
 .painel-superior {
-    display: flex;
-    justify-content: space-between;
-    background: var(--cinza-escuro);
-    padding: 18px;
-    border-radius: 8px;
-    border: 1px solid var(--borda);
+  background: rgba(0,0,0,0.7);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.gerente-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.equipe-info, .financas-info {
+  min-width: 140px;
+}
+
+#avatar-gerente .card {
+  background: var(--f1-gray);
 }
 
 .lobby-botoes {
-    margin-top: 40px;
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
 }
 
-.gerente-info, .equipe-info, .financas-info {
-    text-align: left;
-}
+/* ============================================================
+   CARDS E GRIDS GERAIS
+   ============================================================ */
 
-/* ============================
-   CARD GENÉRICO
-   ============================ */
 .card {
-    background: var(--cinza);
-    padding: 18px;
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--sombra);
-    margin-bottom: 18px;
+  background: var(--f1-dark);
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 10px var(--shadow);
 }
 
-/* ============================
-   GRIDS
-   ============================ */
 .corrida-grid,
 .func-grid,
 .patrocinio-grid,
-.mercado-grid {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 20px;
-    margin-top: 20px;
+.mercado-grid,
+.oficina-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 16px;
 }
 
-/* ============================
-   TABELAS
-   ============================ */
+/* ============================================================
+   TABELAS / PAINÉIS
+   ============================================================ */
+
 .tabela {
-    background: var(--cinza);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid var(--borda);
+  background: var(--f1-dark);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 12px;
+  margin-top: 18px;
 }
 
-.tabela p, .tabela div {
-    margin: 6px 0;
-}
+/* ============================================================
+   TEXTO COM EFEITO MÁQUINA
+   ============================================================ */
 
-/* ============================
-   TEXTO MÁQUINA
-   ============================ */
 .texto-maquina {
-    white-space: pre-line;
-    font-size: 17px;
-    opacity: 0.9;
-    margin: 25px 0;
+  white-space: pre-line;
+  margin-top: 14px;
 }
 
-/* ============================
-   RESPONSIVIDADE
-   ============================ */
+/* ============================================================
+   PÓDIO
+   ============================================================ */
+
+.podio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.podio-card {
+  background: var(--f1-dark);
+  border-radius: 12px;
+  border: 1px solid var(--f1-red);
+  text-align: center;
+  padding: 14px;
+  box-shadow: 0 0 18px rgba(225,6,0,0.6);
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+
 @media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .menu-grid {
-        grid-template-columns: 1fr;
-    }
+  .avatar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .lobby-botoes {
-        grid-template-columns: 1fr 1fr;
-    }
+  .bandeira-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 
-    .escuderia-grid {
-        grid-template-columns: 1fr;
-    }
+  .escuderia-grid,
+  .corrida-grid,
+  .func-grid,
+  .patrocinio-grid,
+  .mercado-grid,
+  .oficina-grid,
+  .lobby-botoes,
+  .lista-reais {
+    grid-template-columns: 1fr;
+  }
 
-    .avatar-grid {
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    .bandeira-grid {
-        grid-template-columns: repeat(4,1fr);
-    }
+  .painel-superior {
+    flex-direction: column;
+  }
 }
