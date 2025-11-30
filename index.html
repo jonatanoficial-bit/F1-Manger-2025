@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>F1 Manager AAA</title>
+  <title>F1 Manager 2025 AAA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -12,7 +12,7 @@
 <section id="tela-capa" class="tela visible">
   <div class="capa-container">
     <h1 class="titulo-capa">F1 MANAGER <span>2025</span></h1>
-    <p class="subtitulo-capa">Simulador de gerenciamento estilo Fórmula 1</p>
+    <p class="subtitulo-capa">Simulador de gerenciamento inspirado na Fórmula 1</p>
     <button class="btn-principal" onclick="abrirMenuPrincipal()">Iniciar</button>
   </div>
 </section>
@@ -33,13 +33,14 @@
 <!-- CRIAR GERENTE -->
 <section id="criar-gerente" class="tela">
   <h2>Criar Novo Gerente</h2>
+
   <label>Nome do Gerente:</label>
   <input id="input-nome-gerente" placeholder="Digite seu nome">
 
-  <h3>Escolha um Avatar</h3>
+  <h3>Escolha um Avatar (você depois coloca as imagens)</h3>
   <div id="lista-avatares" class="avatar-grid"></div>
 
-  <h3>Escolha a Bandeira</h3>
+  <h3>Escolha a Bandeira do País</h3>
   <div id="lista-bandeiras" class="bandeira-grid"></div>
 
   <button class="btn-principal" onclick="confirmarGerenteCriado()">Confirmar</button>
@@ -53,14 +54,14 @@
   <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
 
-<!-- ESCOLHER ESCUDERIA -->
+<!-- ESCOLHA DE ESCUDERIA -->
 <section id="escolher-escuderia" class="tela">
   <h2>Escolha sua Escuderia</h2>
   <div id="lista-escuderias" class="escuderia-grid"></div>
   <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar</button>
 </section>
 
-<!-- LOBBY -->
+<!-- LOBBY PRINCIPAL -->
 <section id="lobby" class="tela">
   <div class="painel-superior">
     <div class="gerente-info">
@@ -88,8 +89,10 @@
     <button onclick="abrirOficina()">Oficina / Carro</button>
     <button onclick="abrirTabelaPilotos()">Classificação Pilotos</button>
     <button onclick="abrirTabelaEquipes()">Classificação Equipes</button>
-    <button class="btn-principal" onclick="abrirProximaCorrida()">Próxima Corrida</button>
+    <button class="btn-principal" onclick="abrirProximaCorrida()">Próximo GP</button>
   </div>
+
+  <button class="btn-voltar" onclick="voltarMenuPrincipal()">Voltar ao Menu</button>
 </section>
 
 <!-- CALENDÁRIO -->
@@ -123,13 +126,13 @@
 <!-- OFICINA / CARRO -->
 <section id="oficina" class="tela">
   <h2>Oficina - Melhorias do Carro</h2>
-  <p>Melhorias influenciam diretamente na performance da classificação e da corrida.</p>
+  <p>As melhorias mexem diretamente no desempenho na classificação e na corrida.</p>
   <div id="oficina-status" class="tabela"></div>
   <div id="oficina-upgrades" class="oficina-grid"></div>
   <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-<!-- TELA GP -->
+<!-- TELA DO GP -->
 <section id="tela-gp" class="tela">
   <h2 id="gp-nome"></h2>
   <p id="gp-circuito"></p>
@@ -137,24 +140,26 @@
   <button onclick="abrirTreinoLivre()">Treino Livre</button>
   <button onclick="abrirQualificacao()">Classificação</button>
   <button class="btn-principal" onclick="abrirCorrida()">Ir para Corrida</button>
-  <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
+  <button class="btn-voltar" onclick="voltarLobby()">Voltar ao Lobby</button>
 </section>
 
-<!-- TREINO LIVRE -->
+<!-- TREINO LIVRE (sem pódio) -->
 <section id="treino-livre" class="tela">
   <h2>Treino Livre</h2>
   <div id="texto-treino" class="texto-maquina"></div>
   <button class="btn-principal" onclick="finalizarTreino()">Ir para Classificação</button>
+  <button class="btn-voltar" onclick="voltarTelaGP()">Voltar ao GP</button>
 </section>
 
-<!-- CLASSIFICAÇÃO -->
+<!-- CLASSIFICAÇÃO (grid completo, sem pódio) -->
 <section id="classificacao" class="tela">
   <h2>Classificação</h2>
   <div id="resultado-classificacao" class="tabela"></div>
   <button class="btn-principal" onclick="finalizarClassificacao()">Ir para Corrida</button>
+  <button class="btn-voltar" onclick="voltarTelaGP()">Voltar ao GP</button>
 </section>
 
-<!-- CORRIDA -->
+<!-- CORRIDA (único lugar que leva ao pódio) -->
 <section id="corrida" class="tela">
   <h2>Corrida</h2>
   <div id="corrida-voltas"></div>
@@ -162,27 +167,29 @@
   <button id="btn-corrida-continuar" class="btn-principal" onclick="irParaPodio()" disabled>
     Ver Pódio
   </button>
+  <!-- Botão para não ficar preso na corrida -->
+  <button class="btn-voltar" onclick="cancelarCorridaEVolarGP()">Voltar ao GP</button>
 </section>
 
-<!-- CLASSIFICAÇÃO PILOTOS -->
+<!-- CLASSIFICAÇÃO DE PILOTOS -->
 <section id="tabela-pilotos" class="tela">
   <h2>Classificação de Pilotos</h2>
   <div id="tabela-pilotos-conteudo" class="tabela"></div>
   <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-<!-- CLASSIFICAÇÃO EQUIPES -->
+<!-- CLASSIFICAÇÃO DE EQUIPES -->
 <section id="tabela-equipes" class="tela">
   <h2>Classificação de Construtores</h2>
   <div id="tabela-equipes-conteudo" class="tabela"></div>
   <button class="btn-voltar" onclick="voltarLobby()">Voltar</button>
 </section>
 
-<!-- PÓDIO -->
+<!-- PÓDIO (apenas depois da corrida) -->
 <section id="podio" class="tela">
   <h2>Pódio</h2>
   <div id="podio-top3" class="podio-grid"></div>
-  <button class="btn-principal" onclick="finalizarCorrida()">Continuar</button>
+  <button class="btn-principal" onclick="finalizarCorrida()">Voltar ao Lobby</button>
 </section>
 
 <!-- CRÉDITOS -->
