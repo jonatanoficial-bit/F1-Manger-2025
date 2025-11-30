@@ -415,3 +415,237 @@ function abrirProximaCorrida() {
   document.getElementById("gp-circuito").innerText = etapa.circuito;
   document.getElementById("gp-voltas").innerText = etapa.voltas + " voltas";
 }
+/* ============================================================
+   TREINO LIVRE
+   ============================================================ */
+
+function abrirTreinoLivre() {
+  mostrarTela("treino-livre");
+
+  const texto = 
+`Iniciando sessão de Treino Livre...
+
+Os carros entram na pista para ajustar:
+• Pressão dos pneus
+• Aerodinâmica
+• Combustível
+• Níveis de potência
+
+Sua equipe coleta dados para melhorar o carro.
+
+Prepare-se: a Classificação começa em breve...`;
+
+  efeitoMaquina("texto-treino", texto, 18);
+}
+
+/* Efeito de máquina de escrever */
+function efeitoMaquina(id, texto, velocidade) {
+  const div = document.getElementById(id);
+  div.innerHTML = "";
+  let i = 0;
+
+  (function escrever(){
+    if (i < texto.length) {
+      div.innerHTML += texto.charAt(i);
+      i++;
+      setTimeout(escrever, velocidade);
+    }
+  })();
+}
+
+function finalizarTreino() {
+  mostrarTela("classificacao");
+  gerarClassificacao();
+}
+
+/* ============================================================
+   CLASSIFICAÇÃO
+   ============================================================ */
+
+function abrirQualificacao() {
+  mostrarTela("classificacao");
+  gerarClassificacao();
+}
+
+function gerarClassificacao() {
+  const pilotos = [...PILOTOS];
+
+  pilotos.forEach(p => {
+    /* Tempo base reduzido pelo rating */
+    let base = 200 - p.rating;
+
+    /* Força da equipe */
+    let equipe = ESCUDERIAS.find(e => e.key === p.equipe);
+    let equipeBonus = equipe ? (100 - equipe.rating) / 8 : 0;
+
+    /* Bônus do carro melhorado */
+    let carroBonus = 0;
+    if (p.equipe === JOGO.equipeSelecionada) {
+      carroBonus =
+        (JOGO.carro.aero + JOGO.carro.motor + JOGO.carro.chassis + JOGO.carro.pit) * -0.8;
+    }
+
+    /* Aleatoriedade */
+    let aleatorio = Math.random() * 8;
+
+    p.tempoClassificacao = base + equipeBonus + aleatorio + carroBonus;
+  });
+
+  pilotos.sort((a, b) => a.tempoClassificacao - b.tempoClassificacao);
+  JOGO.classificacao = pilotos;
+
+  const div = document.getElementById("resultado-classificacao");
+  div.innerHTML = "";
+
+  pilotos.forEach((p, i) => {
+    const linha = document.createElement("p");
+    linha.innerText = `${i+1}º - ${p.nome} (${nomeEquipe(p.equipe)})`;
+    div.appendChild(linha);
+  });
+}
+
+function finalizarClassificacao() {
+  mostrarTela("corrida");
+  prepararCorrida();
+}
+
+/* ============================================================
+   PREPARAR CORRIDA
+   ============================================================ */
+
+function prepararCorrida() {
+  document.getElementById("corrida-voltas").innerText = "";
+  document.getElementById("resultado-corrida").innerHTML = "";
+  document.getElementById("btn-corrida-continuar").disabled = true;
+}
+
+/* ============================================================
+   CORRIDA — SIMULAÇÃO POR VOLTAS + NARRAÇÃO
+   ============================================================ */
+
+function abrirCorrida() {
+  mostrarTela("corrida");
+  iniciarSimulacaoPorVoltas();
+}
+
+function iniciarSimulacaoPorVoltas() {
+  const grid = [...JOGO.classificacao];
+  const etapa = CALENDARIO[JOGO.etapaAtual - 1];
+
+  ESTADO_CORRIDA = {
+    pilotos: grid.map((p, idx) => ({ ...p, score: 0, posicao: idx+1 })),
+    voltaAtual: 0,
+    voltasTotais: Math.min(etapa.voltas, 18), // 18 voltas simuladas
+    chuva: Math.random() < 0.25,
+    bonusEquipe: calcularBonusFuncionarios(),
+    timer: null
+  };
+
+  ESTADO_CORRIDA.timer = setInterval(tickVolta, 350);
+}
+
+/* Bônus total dos funcionários + upgrades */
+function calcularBonusFuncionarios() {
+  let total = 0;
+
+  JOGO.funcionarios.forEach(f => {
+    if (f.tipo === "engenheiro" || f.tipo === "tecnico") {
+      total += f.bonus;
+    }
+  });
+
+  /* Bônus do carro */
+  total += JOGO.carro.aero + JOGO.carro.motor + JOGO.carro.chassis + JOGO.carro.pit;
+
+  return total;
+}
+
+function tickVolta() {
+  if (!ESTADO_CORRIDA) return;
+
+  ESTADO_CORRIDA.voltaAtual++;
+  const e = ESTADO_CORRIDA;
+
+  let mensagens = [];
+
+  /* Cálculo por piloto a cada volta */
+  e.pilotos.forEach(p => {
+    const base = p.rating * 1.1;
+    const agress = p.agressividade * (Math.random() * 0.5 + 0.7);
+
+    /* Chuva */
+    const bonusChuva = e.chuva
+      ? p.chuva * 1.1
+      : p.chuva * 0.5;
+
+    /* Força da equipe */
+    const equipeRating = ESCUDERIAS.find(x => x.key === p.equipe)?.rating || 75;
+
+    const rand = Math.random() * 10;
+
+    /* Bônus do jogador */
+    let bonusTeam = 0;
+    if (p.equipe === JOGO.equipeSelecionada) {
+      bonusTeam = e.bonusEquipe * 1.25;
+    }
+
+    /* SCORE DA VOLTA */
+    p.score += base + agress + bonusChuva + equipeRating + rand + bonusTeam;
+  });
+
+  /* Ordena a cada volta */
+  e.pilotos.sort((a,b) => b.score - a.score);
+
+  /* Narração */
+  const lider = e.pilotos[0];
+  mensagens.push(`Volta ${e.voltaAtual}: ${lider.nome} lidera com ${nomeEquipe(lider.equipe)}.`);
+
+  /* Destaque dos pilotos do jogador */
+  e.pilotos.forEach((p, idx) => {
+    if (p.equipe === JOGO.equipeSelecionada && idx < 6) {
+      mensagens.push(`• ${p.nome} está em ${idx+1}º lugar!`);
+    }
+  });
+
+  /* Atualiza painel */
+  atualizarPainelCorrida(mensagens);
+
+  /* ENCERRA */
+  if (e.voltaAtual >= e.voltasTotais) {
+    encerrarSimulacaoCorrida();
+  }
+}
+
+function atualizarPainelCorrida(mensagens) {
+  document.getElementById("corrida-voltas").innerText =
+    `Volta ${ESTADO_CORRIDA.voltaAtual} / ${ESTADO_CORRIDA.voltasTotais}`;
+
+  const div = document.getElementById("resultado-corrida");
+
+  mensagens.forEach(txt => {
+    const p = document.createElement("p");
+    p.innerText = txt;
+    div.appendChild(p);
+  });
+
+  /* Mantém só os últimos 20 eventos para não travar */
+  while (div.childNodes.length > 20) {
+    div.removeChild(div.firstChild);
+  }
+}
+
+function encerrarSimulacaoCorrida() {
+  clearInterval(ESTADO_CORRIDA.timer);
+
+  ESTADO_CORRIDA.pilotos.sort((a,b) => b.score - a.score);
+
+  JOGO.resultadoCorrida = ESTADO_CORRIDA.pilotos.map(p => ({
+    piloto: p,
+    performance: p.score
+  }));
+
+  aplicarPontuacao(JOGO.resultadoCorrida);
+
+  /* Habilita botão para ir ao pódio */
+  document.getElementById("btn-corrida-continuar").disabled = false;
+}
