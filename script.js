@@ -192,3 +192,205 @@ function selecionarEquipe(key) {
 
     iniciarLobby();
 }
+/* ============================================================
+   SCRIPT.JS — F1 MANAGER AAA
+   PARTE 2 — Lobby, Finanças, Funcionários, Patrocínio, Mercado
+   ============================================================ */
+
+/* ============================================================
+   INICIAR LOBBY
+   ============================================================ */
+
+function iniciarLobby() {
+    mostrarTela("lobby");
+
+    // Mostrar informações do gerente
+    document.getElementById("nome-gerente").innerText = JOGO.gerente.nome;
+    document.getElementById("pais-gerente").innerText = JOGO.gerente.pais.toUpperCase();
+
+    // Mostrar equipe
+    let equipe = ESCUDERIAS.find(e => e.key === JOGO.equipeSelecionada);
+
+    document.getElementById("nome-equipe").innerText = equipe.nome;
+    document.getElementById("motor-equipe").innerText = "Motor: " + equipe.motor;
+
+    // Dinheiro
+    atualizarDinheiro(JOGO.dinheiro);
+
+    // Avatar do gerente
+    document.getElementById("avatar-gerente").innerHTML = `
+        <div class="card" style="width:90px;height:90px;background:#333;border:1px solid #555;"></div>
+        <p style="font-size:12px;opacity:.6;">${JOGO.gerente.avatar}</p>
+    `;
+}
+
+/* ============================================================
+   ATUALIZAR DINHEIRO
+   ============================================================ */
+
+function atualizarDinheiro(valor) {
+    JOGO.dinheiro = valor;
+    document.getElementById("dinheiro-atual").innerText =
+        "R$ " + valor.toLocaleString("pt-BR");
+}
+
+/* ============================================================
+   PATRROCÍNIO
+   ============================================================ */
+
+function abrirPatrocinio() {
+    mostrarTela("patrocinadores");
+    carregarPatrocinios();
+}
+
+function carregarPatrocinios() {
+    let div = document.getElementById("lista-patrocinios");
+    div.innerHTML = "";
+
+    PATROCINADORES.forEach(p => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${p.nome}</h3>
+            <p>Pagamento Mensal: R$ ${p.valor.toLocaleString("pt-BR")}</p>
+        `;
+
+        card.onclick = () => selecionarPatrocinador(p);
+
+        div.appendChild(card);
+    });
+}
+
+function selecionarPatrocinador(p) {
+    JOGO.patrocinador = p;
+    alert("Patrocinador selecionado: " + p.nome);
+    voltarLobby();
+}
+
+/* ============================================================
+   FUNCIONÁRIOS
+   ============================================================ */
+
+function abrirFuncionarios() {
+    mostrarTela("funcionarios");
+    carregarFuncionarios();
+}
+
+function carregarFuncionarios() {
+    let div = document.getElementById("lista-funcionarios");
+    div.innerHTML = "";
+
+    FUNCIONARIOS.forEach(f => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${f.nome}</h3>
+            <p>Tipo: ${f.tipo}</p>
+            <p>Bônus: +${f.bonus}</p>
+            <p>Preço: R$ ${f.preco.toLocaleString("pt-BR")}</p>
+        `;
+
+        card.onclick = () => contratarFuncionario(f);
+
+        div.appendChild(card);
+    });
+}
+
+function contratarFuncionario(f) {
+    if (JOGO.dinheiro < f.preco) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    JOGO.dinheiro -= f.preco;
+    JOGO.funcionarios.push(f);
+
+    atualizarDinheiro(JOGO.dinheiro);
+
+    alert("Funcionário contratado: " + f.nome);
+
+    voltarLobby();
+}
+
+/* ============================================================
+   MERCADO DE PILOTOS
+   ============================================================ */
+
+function abrirMercadoPilotos() {
+    mostrarTela("mercado-pilotos");
+    carregarMercadoPilotos();
+}
+
+function carregarMercadoPilotos() {
+    let div = document.getElementById("lista-pilotos-mercado");
+    div.innerHTML = "";
+
+    PILOTOS.forEach(p => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${p.nome}</h3>
+            <p>Equipe atual: ${p.equipe}</p>
+            <p>Rating: ${p.rating}</p>
+            <p>Agressividade: ${p.agressividade}</p>
+            <p>Chuva: ${p.chuva}</p>
+            <button onclick="contratarPiloto('${p.nome}')">Contratar</button>
+        `;
+
+        div.appendChild(card);
+    });
+}
+
+function contratarPiloto(nome) {
+    let piloto = PILOTOS.find(p => p.nome === nome);
+
+    if (!piloto) {
+        alert("Erro ao contratar piloto.");
+        return;
+    }
+
+    if (JOGO.pilotosEquipe.length >= 2) {
+        alert("Sua equipe já tem 2 pilotos. Você deve demitir alguém antes.");
+        return;
+    }
+
+    // custo simbólico
+    let custo = piloto.rating * 30000;
+
+    if (JOGO.dinheiro < custo) {
+        alert("Dinheiro insuficiente! Preço: R$ " + custo.toLocaleString("pt-BR"));
+        return;
+    }
+
+    JOGO.dinheiro -= custo;
+    atualizarDinheiro(JOGO.dinheiro);
+
+    piloto.equipe = JOGO.equipeSelecionada;
+
+    JOGO.pilotosEquipe.push(piloto);
+
+    alert("Piloto contratado: " + piloto.nome);
+    voltarLobby();
+}
+
+/* ============================================================
+   PRÓXIMA CORRIDA
+   ============================================================ */
+
+function abrirProximaCorrida() {
+    let etapa = CALENDARIO[JOGO.etapaAtual - 1];
+
+    if (!etapa) {
+        alert("Temporada finalizada!");
+        return;
+    }
+
+    mostrarTela("tela-gp");
+
+    document.getElementById("gp-nome").innerText = etapa.nome;
+    document.getElementById("gp-circuito").innerText = etapa.circuito;
+    document.getElementById("gp-voltas").innerText = etapa.voltas + " voltas";
+}
