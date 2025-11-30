@@ -680,3 +680,186 @@ function encerrarSimulacaoCorrida() {
   // habilita botão "Ver Pódio"
   document.getElementById("btn-corrida-continuar").disabled = false;
 }
+/* ============================================================
+   PARTE 3 — PÓDIO, TABELAS, PONTUAÇÃO, SALVAR/CARREGAR
+   ============================================================ */
+
+/* ===============================
+   VER PÓDIO
+   =============================== */
+
+function abrirPodio() {
+  mostrarTela("podio");
+
+  const div = document.getElementById("podio-container");
+  div.innerHTML = "";
+
+  const top3 = JOGO.resultadoCorrida.slice(0, 3);
+
+  top3.forEach((r, i) => {
+    const p = r.piloto;
+    const equipe = ESCUDERIAS.find(e => e.key === p.equipe);
+
+    const card = document.createElement("div");
+    card.classList.add("podio-card");
+
+    card.innerHTML = `
+      <h3>${i + 1}º Lugar</h3>
+      <div class="mini-avatar"></div>
+      <p>${p.nome}</p>
+      <p>${equipe ? equipe.nome : ""}</p>
+    `;
+
+    div.appendChild(card);
+  });
+}
+
+function continuarDepoisDoPodio() {
+  JOGO.etapaAtual++;
+
+  if (JOGO.etapaAtual > CALENDARIO.length) {
+    alert("TEMPORADA ENCERRADA! Parabéns pelo campeonato!");
+    mostrarTela("lobby");
+    return;
+  }
+
+  mostrarTela("lobby");
+}
+
+/* ===============================
+   PONTUAÇÃO DO MUNDIAL
+   =============================== */
+
+function aplicarPontuacao(resultado) {
+  resultado.forEach((r, i) => {
+    const piloto = r.piloto;
+
+    // Pontuação oficial F1
+    if (i < PONTOS.length) {
+      TABELA_PILOTOS[piloto.nome] += PONTOS[i];
+      TABELA_CONSTRUTORES[piloto.equipe] += PONTOS[i];
+    }
+  });
+}
+
+/* ===============================
+   TABELA DE PILOTOS (Mundial)
+   =============================== */
+
+function abrirTabelaPilotos() {
+  mostrarTela("tabela-pilotos");
+
+  const div = document.getElementById("tabela-pilotos-lista");
+  div.innerHTML = "";
+
+  const lista = Object.keys(TABELA_PILOTOS)
+    .map(nome => ({
+      nome,
+      pontos: TABELA_PILOTOS[nome],
+      piloto: PILOTOS.find(p => p.nome === nome)
+    }))
+    .sort((a, b) => b.pontos - a.pontos);
+
+  lista.forEach((d, i) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const equipe = ESCUDERIAS.find(e => e.key === d.piloto.equipe);
+
+    card.innerHTML = `
+      <h3>${i + 1}º - ${d.nome}</h3>
+      <p>${equipe?.nome || ""}</p>
+      <p>Pontos: ${d.pontos}</p>
+    `;
+
+    div.appendChild(card);
+  });
+}
+
+/* ===============================
+   TABELA DE CONSTRUTORES
+   =============================== */
+
+function abrirTabelaConstrutores() {
+  mostrarTela("tabela-equipes");
+
+  const div = document.getElementById("tabela-equipes-lista");
+  div.innerHTML = "";
+
+  const lista = Object.keys(TABELA_CONSTRUTORES)
+    .map(k => ({
+      equipeKey: k,
+      pontos: TABELA_CONSTRUTORES[k],
+      equipe: ESCUDERIAS.find(e => e.key === k)
+    }))
+    .sort((a, b) => b.pontos - a.pontos);
+
+  lista.forEach((d, i) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    card.innerHTML = `
+      <h3>${i + 1}º - ${d.equipe.nome}</h3>
+      <p>Pontos: ${d.pontos}</p>
+    `;
+
+    div.appendChild(card);
+  });
+}
+
+/* ===============================
+   SALVAR E CARREGAR JOGO
+   =============================== */
+
+function salvarJogo() {
+  const save = {
+    JOGO,
+    TABELA_PILOTOS,
+    TABELA_CONSTRUTORES
+  };
+
+  localStorage.setItem("F1_MANAGER_2025_SAVE", JSON.stringify(save));
+  alert("Carreira salva com sucesso!");
+}
+
+function carregarJogo() {
+  const data = localStorage.getItem("F1_MANAGER_2025_SAVE");
+  if (!data) {
+    alert("Nenhum save encontrado.");
+    return;
+  }
+
+  const save = JSON.parse(data);
+
+  JOGO = save.JOGO;
+  TABELA_PILOTOS = save.TABELA_PILOTOS;
+  TABELA_CONSTRUTORES = save.TABELA_CONSTRUTORES;
+
+  iniciarLobby();
+  alert("Carreira carregada!");
+}
+
+function resetarCarreira() {
+  if (!confirm("Tem certeza que deseja apagar tudo?")) return;
+
+  localStorage.removeItem("F1_MANAGER_2025_SAVE");
+
+  location.reload();
+}
+
+/* ===============================
+   BOTÕES DE VOLTAR GLOBAL
+   =============================== */
+
+function voltarQualquerTela() {
+  // garante que sempre volta ao Lobby
+  iniciarLobby();
+}
+
+/* ===============================
+   INICIALIZAÇÃO
+   =============================== */
+
+window.onload = () => {
+  mostrarTela("tela-capa");
+};
