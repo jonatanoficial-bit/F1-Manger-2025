@@ -11,7 +11,7 @@
   --f1-red-light: #ff3b30;
   --border: rgba(255,255,255,0.12);
   --shadow: rgba(0,0,0,0.6);
-  --font: 'Segoe UI', system-ui, sans-serif;
+  --font: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
@@ -22,7 +22,7 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #222 0, #000 55%);
+  background: radial-gradient(circle at top, #292929 0, #000 60%);
   color: var(--f1-light);
 }
 
@@ -33,7 +33,7 @@ body {
 .tela {
   display: none;
   min-height: 100vh;
-  padding: 32px 20px;
+  padding: 32px 20px 40px;
 }
 
 .tela.visible {
@@ -96,7 +96,7 @@ button:hover {
 }
 
 .btn-principal {
-  margin-top: 30px;
+  margin-top: 24px;
   padding: 14px 30px;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--f1-red), var(--f1-red-light));
@@ -116,7 +116,7 @@ button:hover {
 }
 
 .btn-voltar {
-  margin-top: 20px;
+  margin-top: 18px;
   background: transparent;
   border-color: var(--f1-red);
   color: var(--f1-red);
@@ -128,8 +128,14 @@ button:hover {
 }
 
 /* ============================================================
-   INPUT
+   INPUTS
    ============================================================ */
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
 
 input {
   background: #101010;
@@ -236,6 +242,7 @@ input {
   transform: translateY(-2px);
 }
 
+/* mini “círculo” onde depois vão logos/avatars */
 .mini-logo,
 .mini-avatar {
   display: inline-block;
@@ -283,10 +290,11 @@ input {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
+  margin-bottom: 10px;
 }
 
 /* ============================================================
-   CARDS E GRIDS GERAIS
+   CARDS / GRIDS GERAIS
    ============================================================ */
 
 .card {
