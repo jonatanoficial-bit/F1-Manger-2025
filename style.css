@@ -1,7 +1,3 @@
-/* ============================================================
-   TEMA F1 — PRETO, VERMELHO, BRANCO
-   ============================================================ */
-
 :root {
   --f1-black: #000000;
   --f1-dark: #111111;
@@ -22,23 +18,69 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #292929 0, #000 60%);
+  background: #000;
   color: var(--f1-light);
 }
 
 /* ============================================================
-   TELAS
+   TELAS E FUNDOS
    ============================================================ */
 
 .tela {
   display: none;
   min-height: 100vh;
-  padding: 32px 20px 40px;
+  position: relative;
 }
 
 .tela.visible {
   display: block;
 }
+
+.overlay {
+  background: radial-gradient(circle at top, rgba(0,0,0,0.85), rgba(0,0,0,0.95));
+  min-height: 100vh;
+  padding: 32px 20px 40px;
+}
+
+/* FUNDOS ESTÁTICOS */
+.tela-fundo-capa {
+  background: url('assets/ui/capa_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-lobby {
+  background: url('assets/ui/lobby_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-mercado {
+  background: url('assets/ui/mercado_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-oficina {
+  background: url('assets/ui/oficina_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-patrocinio {
+  background: url('assets/ui/patrocinio_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-funcionarios {
+  background: url('assets/ui/funcionarios_bg.png') center/cover no-repeat fixed;
+}
+
+.tela-fundo-podio {
+  background: url('assets/ui/podio_bg.png') center/cover no-repeat fixed;
+}
+
+/* FUNDO DINÂMICO DAS PISTAS (tela-gp, treino, quali, corrida) */
+.tela-fundo-pista {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* ============================================================
+   TÍTULOS E TEXTO
+   ============================================================ */
 
 h1, h2, h3 {
   font-weight: 700;
@@ -47,15 +89,6 @@ h1, h2, h3 {
 h2 {
   font-size: 26px;
   margin-bottom: 18px;
-}
-
-/* ============================================================
-   CAPA
-   ============================================================ */
-
-.capa-container {
-  text-align: center;
-  margin-top: 120px;
 }
 
 .titulo-capa {
@@ -73,6 +106,15 @@ h2 {
 .subtitulo-capa {
   margin-top: 10px;
   opacity: 0.8;
+}
+
+/* ============================================================
+   CAPA
+   ============================================================ */
+
+.capa-container {
+  text-align: center;
+  margin-top: 120px;
 }
 
 /* ============================================================
@@ -207,7 +249,7 @@ input {
 }
 
 /* ============================================================
-   GERENTES REAIS
+   GERENTES REAIS / ESCUDERIAS
    ============================================================ */
 
 .lista-reais {
@@ -215,10 +257,6 @@ input {
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
-
-/* ============================================================
-   ESCUDERIAS
-   ============================================================ */
 
 .escuderia-grid {
   display: grid;
@@ -242,7 +280,7 @@ input {
   transform: translateY(-2px);
 }
 
-/* mini “círculo” onde depois vão logos/avatars */
+/* mini círculos */
 .mini-logo,
 .mini-avatar {
   display: inline-block;
@@ -294,7 +332,7 @@ input {
 }
 
 /* ============================================================
-   CARDS / GRIDS GERAIS
+   GRIDS E CARDS GERAIS
    ============================================================ */
 
 .card {
@@ -321,7 +359,7 @@ input {
    ============================================================ */
 
 .tabela {
-  background: var(--f1-dark);
+  background: rgba(0,0,0,0.78);
   border-radius: 12px;
   border: 1px solid var(--border);
   padding: 12px;
@@ -329,7 +367,7 @@ input {
 }
 
 /* ============================================================
-   TEXTO COM EFEITO MÁQUINA
+   TEXTO MÁQUINA
    ============================================================ */
 
 .texto-maquina {
@@ -349,7 +387,7 @@ input {
 }
 
 .podio-card {
-  background: var(--f1-dark);
+  background: rgba(0,0,0,0.8);
   border-radius: 12px;
   border: 1px solid var(--f1-red);
   text-align: center;
