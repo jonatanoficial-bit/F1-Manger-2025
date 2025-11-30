@@ -433,11 +433,26 @@ function abrirProximaCorrida() {
     return;
   }
 
+  // Define fundo da pista para todas as telas relacionadas ao GP
+  setFundoPista(etapa.trackKey || "bahrain");
+
   mostrarTela("tela-gp");
 
   document.getElementById("gp-nome").innerText = etapa.nome;
   document.getElementById("gp-circuito").innerText = etapa.circuito;
   document.getElementById("gp-voltas").innerText = etapa.voltas + " voltas";
+}
+
+/* Função para trocar o fundo das telas de pista */
+function setFundoPista(trackKey) {
+  const caminho = `assets/tracks/${trackKey}.png`;
+
+  ["tela-gp", "treino-livre", "classificacao", "corrida"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.backgroundImage = `url('${caminho}')`;
+    }
+  });
 }
 /* ============================================================
    TREINO LIVRE
