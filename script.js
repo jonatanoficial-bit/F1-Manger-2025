@@ -1,6 +1,5 @@
 /* ============================================================
    SCRIPT PRINCIPAL — F1 MANAGER 2025 AAA
-   PARTE 1 — ESTADO GLOBAL, NAVEGAÇÃO, GERENTE, EQUIPES, LOBBY
    ============================================================ */
 
 /* ===============================
@@ -49,6 +48,8 @@ function nomeEquipe(code) {
 function abrirMenuPrincipal() { mostrarTela("menu-principal"); }
 function voltarParaCapa() { mostrarTela("tela-capa"); }
 function voltarMenuPrincipal() { mostrarTela("menu-principal"); }
+
+function abrirCreditos() { mostrarTela("creditos"); }
 
 function voltarLobby() {
   mostrarTela("lobby");
@@ -164,7 +165,9 @@ function abrirEscolhaEquipe() {
     const card = document.createElement("div");
     card.classList.add("escuderia-card");
     card.innerHTML = `
-      <p><span class="mini-logo">${e.logo}</span></p>
+      <div class="esc-logo">
+        <img src="assets/logos/${e.logo}" alt="${e.nome}">
+      </div>
       <h3>${e.nome}</h3>
       <p>Motor: ${e.motor}</p>
     `;
@@ -433,7 +436,7 @@ function abrirProximaCorrida() {
     return;
   }
 
-  // Define fundo da pista para todas as telas relacionadas ao GP
+  // Define fundo da pista para tela-gp, treino, quali e corrida
   setFundoPista(etapa.trackKey || "bahrain");
 
   mostrarTela("tela-gp");
@@ -443,10 +446,8 @@ function abrirProximaCorrida() {
   document.getElementById("gp-voltas").innerText = etapa.voltas + " voltas";
 }
 
-/* Função para trocar o fundo das telas de pista */
 function setFundoPista(trackKey) {
   const caminho = `assets/tracks/${trackKey}.png`;
-
   ["tela-gp", "treino-livre", "classificacao", "corrida"].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -454,6 +455,7 @@ function setFundoPista(trackKey) {
     }
   });
 }
+
 /* ============================================================
    TREINO LIVRE
    ============================================================ */
@@ -497,7 +499,7 @@ function finalizarTreino() {
 }
 
 /* ============================================================
-   CLASSIFICAÇÃO (SEM PÓDIO, APENAS GRID)
+   CLASSIFICAÇÃO (GRID)
    ============================================================ */
 
 function abrirQualificacao() {
@@ -524,7 +526,7 @@ function gerarClassificacao() {
         (JOGO.carro.aero + JOGO.carro.motor + JOGO.carro.chassis + JOGO.carro.pit) * -0.7;
     }
 
-    // aleatoriedade e "nervosismo"
+    // aleatoriedade
     const aleatorio = Math.random() * 8;
 
     p.tempoClassificacao = base + equipeBonus + aleatorio + carroBonus;
@@ -548,7 +550,7 @@ function finalizarClassificacao() {
 }
 
 /* ============================================================
-   PREPARAR CORRIDA
+   CORRIDA — SIMULAÇÃO POR VOLTAS + NARRAÇÃO
    ============================================================ */
 
 function prepararCorrida() {
@@ -556,10 +558,6 @@ function prepararCorrida() {
   document.getElementById("resultado-corrida").innerHTML = "";
   document.getElementById("btn-corrida-continuar").disabled = true;
 }
-
-/* ============================================================
-   CORRIDA — SIMULAÇÃO POR VOLTAS + NARRAÇÃO
-   ============================================================ */
 
 function abrirCorrida() {
   mostrarTela("corrida");
@@ -570,7 +568,6 @@ function abrirCorrida() {
 function iniciarSimulacaoPorVoltas() {
   const grid = [...JOGO.classificacao];
   if (!grid || grid.length === 0) {
-    // se por algum motivo a classificação não existir, gera de novo
     gerarClassificacao();
   }
 
@@ -583,7 +580,7 @@ function iniciarSimulacaoPorVoltas() {
       posicao: idx + 1
     })),
     voltaAtual: 0,
-    voltasTotais: Math.min(etapa.voltas, 20), // simula no máximo 20 voltas para ficar dinâmico
+    voltasTotais: Math.min(etapa.voltas, 20),
     chuva: Math.random() < 0.25,
     bonusEquipe: calcularBonusFuncionariosECarro(),
     timer: null
@@ -619,7 +616,6 @@ function tickVolta() {
     const base = p.rating * 1.1;
     const agress = p.agressividade * (0.7 + Math.random() * 0.5);
 
-    // chuva influencia pilotagem
     const bonusChuva = e.chuva
       ? p.chuva * 1.15
       : p.chuva * 0.5;
@@ -636,13 +632,11 @@ function tickVolta() {
     p.score += base + agress + bonusChuva + equipeRating + rand + bonusTeam;
   });
 
-  // ordena pela performance acumulada
   e.pilotos.sort((a, b) => b.score - a.score);
 
   const lider = e.pilotos[0];
   mensagens.push(`Volta ${e.voltaAtual}: ${lider.nome} lidera com ${nomeEquipe(lider.equipe)}.`);
 
-  // destaque dos pilotos da sua equipe
   e.pilotos.forEach((p, idx) => {
     if (p.equipe === JOGO.equipeSelecionada && idx < 10) {
       mensagens.push(`• ${p.nome} está em ${idx + 1}º lugar.`);
@@ -671,7 +665,6 @@ function atualizarPainelCorrida(mensagens) {
     div.appendChild(p);
   });
 
-  // limita para não ficar gigantesco
   while (div.childNodes.length > 30) {
     div.removeChild(div.firstChild);
   }
@@ -689,35 +682,25 @@ function encerrarSimulacaoCorrida() {
     performance: p.score
   }));
 
-  // a função aplicarPontuacao será definida na PARTE 3
   aplicarPontuacao(JOGO.resultadoCorrida);
 
-  // habilita botão "Ver Pódio"
   document.getElementById("btn-corrida-continuar").disabled = false;
 }
+
 /* ============================================================
    PARTE 3 — PÓDIO, TABELAS, PONTUAÇÃO, SAVE/LOAD
    ============================================================ */
 
-/* ===============================
-   PONTUAÇÃO DO MUNDIAL
-   =============================== */
-
+/* PONTUAÇÃO DO MUNDIAL */
 function aplicarPontuacao(resultado) {
-  // resultado = array de { piloto, performance }
   resultado.forEach((r, i) => {
     const piloto = r.piloto;
     const equipeKey = piloto.equipe;
-
-    const pontos = PONTOS[i] || 0; // top 10 pontua, resto 0
+    const pontos = PONTOS[i] || 0;
 
     if (pontos > 0) {
-      if (TABELA_PILOTOS[piloto.nome] == null) {
-        TABELA_PILOTOS[piloto.nome] = 0;
-      }
-      if (TABELA_CONSTRUTORES[equipeKey] == null) {
-        TABELA_CONSTRUTORES[equipeKey] = 0;
-      }
+      if (TABELA_PILOTOS[piloto.nome] == null) TABELA_PILOTOS[piloto.nome] = 0;
+      if (TABELA_CONSTRUTORES[equipeKey] == null) TABELA_CONSTRUTORES[equipeKey] = 0;
 
       TABELA_PILOTOS[piloto.nome] += pontos;
       TABELA_CONSTRUTORES[equipeKey] += pontos;
@@ -725,12 +708,8 @@ function aplicarPontuacao(resultado) {
   });
 }
 
-/* ===============================
-   PÓDIO (BOTÃO "VER PÓDIO" DA CORRIDA)
-   =============================== */
-
+/* PÓDIO */
 function irParaPodio() {
-  // chamado pelo botão da tela de CORRIDA
   mostrarTela("podio");
   renderPodio();
 }
@@ -757,7 +736,10 @@ function renderPodio() {
 
     card.innerHTML = `
       <h3>${idx + 1}º Lugar</h3>
-      <div class="mini-avatar"></div>
+      <div class="podio-imagens">
+        <div class="mini-avatar"></div>
+        ${equipe ? `<img src="assets/logos/${equipe.logo}" class="mini-logo-img" alt="${equipe.nome}">` : ""}
+      </div>
       <p>${p.nome}</p>
       <p>${equipe ? equipe.nome : ""}</p>
     `;
@@ -766,30 +748,21 @@ function renderPodio() {
   });
 }
 
-/* chamado pelo botão "Voltar ao Lobby" da tela de PÓDIO */
 function finalizarCorrida() {
-  // Avança etapa
   JOGO.etapaAtual++;
 
   if (JOGO.etapaAtual > CALENDARIO.length) {
     alert("TEMPORADA ENCERRADA! Parabéns pela temporada!");
-    // opcional: salvarJogo();
     mostrarTela("lobby");
     iniciarLobby();
     return;
   }
 
-  // opcional: salvar automaticamente a cada corrida
-  // salvarJogo();
-
   mostrarTela("lobby");
   iniciarLobby();
 }
 
-/* ===============================
-   CLASSIFICAÇÃO DE PILOTOS
-   =============================== */
-
+/* CLASSIFICAÇÃO DE PILOTOS */
 function abrirTabelaPilotos() {
   mostrarTela("tabela-pilotos");
 
@@ -803,7 +776,7 @@ function abrirTabelaPilotos() {
       pontos: TABELA_PILOTOS[nome],
       piloto
     };
-  }).filter(x => x.piloto) // garante piloto válido
+  }).filter(x => x.piloto)
     .sort((a, b) => b.pontos - a.pontos);
 
   lista.forEach((item, idx) => {
@@ -823,10 +796,7 @@ function abrirTabelaPilotos() {
   });
 }
 
-/* ===============================
-   CLASSIFICAÇÃO DE EQUIPES
-   =============================== */
-
+/* CLASSIFICAÇÃO DE EQUIPES */
 function abrirTabelaEquipes() {
   mostrarTela("tabela-equipes");
 
@@ -846,7 +816,7 @@ function abrirTabelaEquipes() {
     linha.innerHTML = `
       <p>
         ${idx + 1}º -
-        <span class="mini-logo"></span>
+        <img src="assets/logos/${e.logo}" class="mini-logo-img" alt="${e.nome}">
         ${e.nome} — ${item.pontos} pts
       </p>
     `;
@@ -854,9 +824,7 @@ function abrirTabelaEquipes() {
   });
 }
 
-/* ===============================
-   SALVAR / CARREGAR / RESETAR CARREIRA
-   =============================== */
+/* SALVAR / CARREGAR / RESETAR CARREIRA */
 
 function salvarJogo() {
   const save = {
@@ -911,7 +879,6 @@ function resetarCarreira() {
     console.error("Erro ao limpar save:", e);
   }
 
-  // reset estado
   JOGO = {
     gerente: null,
     equipeSelecionada: null,
@@ -927,16 +894,13 @@ function resetarCarreira() {
 
   TABELA_PILOTOS = {};
   TABELA_CONSTRUTORES = {};
-
   PILOTOS.forEach(p => TABELA_PILOTOS[p.nome] = 0);
   ESCUDERIAS.forEach(e => TABELA_CONSTRUTORES[e.key] = 0);
 
   mostrarTela("tela-capa");
 }
 
-/* ===============================
-   INICIALIZAÇÃO
-   =============================== */
+/* INICIALIZAÇÃO */
 
 window.onload = () => {
   mostrarTela("tela-capa");
