@@ -280,7 +280,17 @@ input {
   transform: translateY(-2px);
 }
 
-/* mini círculos */
+/* LOGO NAS ESCUDERIAS */
+.esc-logo {
+  margin-bottom: 6px;
+}
+.esc-logo img {
+  width: 60px;
+  height: auto;
+  display: block;
+}
+
+/* mini círculos (pode continuar usando onde não tiver img) */
 .mini-logo,
 .mini-avatar {
   display: inline-block;
@@ -293,6 +303,17 @@ input {
   font-size: 9px;
   margin-right: 6px;
   opacity: 0.9;
+}
+
+/* mini logo em img (tabela construtores / pódio) */
+.mini-logo-img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #111;
+  object-fit: contain;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ============================================================
@@ -393,6 +414,14 @@ input {
   text-align: center;
   padding: 14px;
   box-shadow: 0 0 18px rgba(225,6,0,0.6);
+}
+
+.podio-imagens {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
 }
 
 /* ============================================================
